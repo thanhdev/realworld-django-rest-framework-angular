@@ -9,9 +9,11 @@ from users.models import User
 class TestUserViewSet(APITestCase):
     url = reverse("users-list")
     data = {
-        "username": "test",
-        "email": "test@gmail.com",
-        "password": "password123",
+        'user': {
+            "username": "test",
+            "email": "test@gmail.com",
+            "password": "password123",
+        }
     }
 
     def test_create_user(self):
@@ -27,7 +29,7 @@ class TestUserViewSet(APITestCase):
 
     def test_create_user_with_existing_username(self):
         # Arrange
-        User.objects.create_user(**self.data)
+        User.objects.create_user(**self.data['user'])
 
         # Act
         response = self.client.post(self.url, self.data)
