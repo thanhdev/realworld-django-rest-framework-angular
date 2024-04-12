@@ -91,7 +91,8 @@ class TestUserView(TestMixin, APITestCase):
         # Arrange
         data = dict(
             username="new_username",
-            email="admin@gmail.com",
+            email="new_admin@gmail.com",
+            bio="new bio",
             password="newpassword",
         )
         self.client.force_authenticate(self.admin_user)
@@ -104,3 +105,5 @@ class TestUserView(TestMixin, APITestCase):
         self.admin_user.refresh_from_db()
         self.assertTrue(self.admin_user.check_password(data['password']))
         self.assertEqual(self.admin_user.username, data['username'])
+        self.assertEqual(self.admin_user.email, data['email'])
+        self.assertEqual(self.admin_user.bio, data['bio'])

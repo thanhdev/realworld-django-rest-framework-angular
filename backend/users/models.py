@@ -11,7 +11,7 @@ class User(AbstractUser):
     last_name = None  # type: ignore[assignment]
     email = models.EmailField(unique=True)
     bio = models.TextField(blank=True)
-    image = models.ImageField(blank=True, null=True, upload_to="user_images/")
+    image = models.URLField(blank=True, null=True)
     following = models.ManyToManyField(
         "self", related_name="followers", symmetrical=False
     )
