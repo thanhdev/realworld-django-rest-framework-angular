@@ -1,38 +1,39 @@
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from django.urls import reverse
-
 from users.models import User
+from users.tests.mixins import TestMixin
 
 
 class TestUserViewSet(APITestCase):
     url = reverse("users-list")
+    login_url = reverse("users-login")
     data = {
-        'user': {
-            "username": "test",
-            "email": "test@gmail.com",
-            "password": "password123",
-        }
+        "username": "test",
+        "email": "test@gmail.com",
+        "password": "password123",
     }
 
     def test_create_user(self):
         # Act
-        response = self.client.post(self.url, self.data)
+        response = self.client.post(self.url, {'user': self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data.get("token"))
         self.assertIsNone(response.data.get("password"))
         self.assertEqual(User.objects.count(), 1)
-        self.assertEqual(User.objects.first().username, 'test')
+        user = User.objects.first()
+        self.assertEqual(user.username, self.data['username'])
+        self.assertTrue(user.check_password(self.data['password']))
 
     def test_create_user_with_existing_username(self):
         # Arrange
-        User.objects.create_user(**self.data['user'])
+        User.objects.create_user(**self.data)
 
         # Act
-        response = self.client.post(self.url, self.data)
+        response = self.client.post(self.url, {'user': self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -43,10 +44,10 @@ class TestUserViewSet(APITestCase):
 
     def test_login_user(self):
         # Arrange
-        User.objects.create_user(**self.data['user'])
+        User.objects.create_user(**self.data)
 
         # Act
-        response = self.client.post(reverse("users-login"), self.data)
+        response = self.client.post(self.login_url, {'user': self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -55,7 +56,7 @@ class TestUserViewSet(APITestCase):
 
     def test_login_user_with_invalid_credentials(self):
         # Act
-        response = self.client.post(reverse("users-login"), self.data)
+        response = self.client.post(self.login_url, {'user': self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -63,3 +64,43 @@ class TestUserViewSet(APITestCase):
             response.data["non_field_errors"][0],
             "Invalid email or password"
         )
+
+
+class TestUserView(TestMixin, APITestCase):
+    url = reverse("user")
+
+    def test_get_user_unauthenticated(self):
+        # Act
+        response = self.client.get(self.url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_user(self):
+        # Act
+        headers = {"Authorization": f"Token {self.admin_user.token}"}
+        response = self.client.get(self.url, headers=headers)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["username"], self.admin_user.username)
+        self.assertEqual(response.data["email"], self.admin_user.email)
+        self.assertIsNotNone(response.data.get("token"))
+
+    def test_update_user(self):
+        # Arrange
+        data = dict(
+            username="new_username",
+            email="admin@gmail.com",
+            password="newpassword",
+        )
+        self.client.force_authenticate(self.admin_user)
+
+        # Act
+        response = self.client.put(self.url, {"user": data})
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.admin_user.refresh_from_db()
+        self.assertTrue(self.admin_user.check_password(data['password']))
+        self.assertEqual(self.admin_user.username, data['username'])

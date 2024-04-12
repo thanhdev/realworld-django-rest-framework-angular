@@ -5,8 +5,14 @@ from users.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+        return User.objects.create_user(**validated_data)
+
+    def update(self, instance, validated_data):
+        super().update(instance, validated_data)
+        if password := validated_data.get('password'):
+            instance.set_password(password)
+            instance.save()
+        return instance
 
     class Meta:
         model = User

@@ -26,11 +26,12 @@ SECRET_KEY = 'django-insecure-g&lp-p4!xc53=r_$1kup%#-bmpo4h+1$gw9@!2jp5a3y%t@sg9
 DEBUG = True
 
 ALLOWED_HOSTS = []
-APPEND_SLASH = False
 
 # Authentication
 AUTH_USER_MODEL = "users.User"
-
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("Bearer", "Token"),
+}
 
 # Application definition
 
@@ -130,3 +131,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_RENDERER_CLASSES': [
+        'config.renderers.CustomJSONRenderer',
+    ],
+}
