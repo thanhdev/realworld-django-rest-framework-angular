@@ -40,3 +40,26 @@ class TestUserViewSet(APITestCase):
             response.data["username"][0],
             "A user with that username already exists."
         )
+
+    def test_login_user(self):
+        # Arrange
+        User.objects.create_user(**self.data['user'])
+
+        # Act
+        response = self.client.post(reverse("users-login"), self.data)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.data.get("token"))
+        self.assertIsNone(response.data.get("password"))
+
+    def test_login_user_with_invalid_credentials(self):
+        # Act
+        response = self.client.post(reverse("users-login"), self.data)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0],
+            "Invalid email or password"
+        )
