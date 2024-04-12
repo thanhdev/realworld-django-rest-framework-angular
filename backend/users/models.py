@@ -21,3 +21,6 @@ class User(AbstractUser):
         from rest_framework_simplejwt.tokens import RefreshToken
 
         return str(RefreshToken.for_user(self).access_token)
+
+    def is_following(self, user: "User") -> bool:
+        return self.following.filter(pk=user.pk).exists()

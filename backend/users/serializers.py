@@ -35,3 +35,14 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Invalid email or password')
         self.context['user'] = user
         return attrs
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    following = serializers.SerializerMethodField()
+
+    def get_following(self, user):
+        return self.context['request'].user.is_following(user)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'bio', 'image', 'following']
