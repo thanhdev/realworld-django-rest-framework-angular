@@ -5,14 +5,14 @@ import { LoginComponent } from "./pages/login/login.component";
 import { RegisterComponent } from "./pages/register/register.component";
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', component: HomeComponent },
-  { path: 'login', pathMatch: 'full', component: LoginComponent },
-  { path: 'register', pathMatch: 'full', component: RegisterComponent },
-  { path: '**', redirectTo: '' }
+  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: '**', redirectTo: ''}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

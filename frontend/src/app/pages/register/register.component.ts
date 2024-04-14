@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {RegisterFormViewModel} from "../../common/models/form/authentication-form.view-model";
-import {UserService} from "../../common/services/api/user.service";
-import {CreateUserPayload} from "../../common/models/api/user.model";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { RegisterFormViewModel } from "../../common/models/form/authentication-form.view-model";
+import { UserService } from "../../common/services/api/user.service";
+import { CreateUserPayload } from "../../common/models/api/user.model";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ import {CreateUserPayload} from "../../common/models/api/user.model";
 })
 export class RegisterComponent {
   public mainForm: FormGroup<RegisterFormViewModel>;
-  public errorDisplayed = false;
+  public errors: {[key: string]: string[] | null} = {};
   public successDisplayed = false;
 
   constructor(
@@ -38,13 +39,17 @@ export class RegisterComponent {
         username: formValue.username!
       }
     }
+
+    this.errors = {};
+
     this._userService.registerUser(payload).subscribe({
       next: () => {
         this.successDisplayed = true;
         this.mainForm.reset();
       },
-      error: () => {
-        this.errorDisplayed = true;
+      error: (err: HttpErrorResponse) => {
+        this.successDisplayed = false;
+        this.errors = err.error.errors;
       }
     });
   }

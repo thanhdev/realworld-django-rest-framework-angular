@@ -8,7 +8,7 @@
         </p>
 
         <ul *ngIf="errorDisplayed" class="error-messages">
-          <li>That email is already taken</li>
+          <li>Wrong login credential</li>
         </ul>
 
         <form [formGroup]="mainForm">
@@ -18,7 +18,8 @@
           <fieldset class="form-group">
             <input formControlName="password" class="form-control form-control-lg" type="password" placeholder="Password" />
           </fieldset>
-          <button [disabled]="!mainForm.valid" class="btn btn-lg btn-primary pull-xs-right">Sign in</button>
+          <button [disabled]="!mainForm.valid" (click)="login()"
+                  class="btn btn-lg btn-primary pull-xs-right">Sign in</button>
         </form>
       </div>
     </div>
