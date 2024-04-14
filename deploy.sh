@@ -1,3 +1,4 @@
+export DJANGO_SETTINGS_MODULE=config.deploy_settings
 npm --prefix frontend install
 npm --prefix frontend run build
 rm backend/static/{*.js,*.css}
