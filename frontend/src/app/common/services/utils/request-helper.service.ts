@@ -12,20 +12,20 @@ export class RequestHelperService {
     private readonly _httpClient: HttpClient
   ) { }
 
-  public get(url: string, params?: Object, options?: any): Observable<any> {
-    return this._httpClient.get(this._decorateUrl(url), { params, ...options });
+  public get(url: string, params?: any): Observable<any> {
+    return this._httpClient.get(this._decorateUrl(url), { params });
   }
 
-  public post(url: string, body: any, options?: any): Observable<any> {
-    return this._httpClient.post(this._decorateUrl(url), body, options);
+  public post(url: string, body: any): Observable<any> {
+    return this._httpClient.post(this._decorateUrl(url), body);
   }
 
-  public put(url: string, body: any, options?: any): Observable<any> {
-    return this._httpClient.put(this._decorateUrl(url), body, options);
+  public put(url: string, body: any): Observable<any> {
+    return this._httpClient.put(this._decorateUrl(url), body);
   }
 
-  public delete(url: string, options?: any): Observable<any> {
-    return this._httpClient.delete(this._decorateUrl(url), options);
+  public delete(url: string): Observable<any> {
+    return this._httpClient.delete(this._decorateUrl(url));
   }
 
   private _decorateUrl(url: string): string {
