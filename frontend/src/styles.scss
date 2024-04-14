@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+
+//Import Ionicon icons & Google Fonts our Bootstrap theme relies on
+@import "//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css";
+
+//Import the custom Bootstrap 4 theme from hosted CDN
+@import "//demo.productionready.io/main.css";
