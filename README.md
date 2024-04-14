@@ -27,12 +27,14 @@ For more information on how to this works with other frontends/backends, head ov
 ```shell
 # Install environment and dependencies
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate # or `.venv/Scripts/activate` on Windows
 pip install -r backend/requirements.txt
-npm --prefix=frontend install
+
+# Apply migrations
 python backend/manage.py migrate
 
-# Build frontend
+# Install and build frontend
+npm --prefix=frontend install
 npm --prefix=frontend run build
 
 # Run server
