@@ -7,11 +7,15 @@
           <a href="/login">Have an account?</a>
         </p>
 
-        <ul *ngIf="errorDisplayed" class="error-messages">
-          <li>That email is already taken</li>
+        <ul *ngIf="errors['email'] && !mainForm.pristine" class="error-messages">
+          <li *ngFor="let err of errors['email']">{{ err }}</li>
         </ul>
 
-        <ul *ngIf="successDisplayed" class="success-messages">
+        <ul *ngIf="errors['username'] && !mainForm.pristine" class="error-messages">
+          <li *ngFor="let err of errors['username']">{{ err }}</li>
+        </ul>
+
+        <ul *ngIf="successDisplayed && mainForm.pristine" class="success-messages">
           <li>Registration successful</li>
         </ul>
 
