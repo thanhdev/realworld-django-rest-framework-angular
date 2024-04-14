@@ -11,17 +11,22 @@
           <li>That email is already taken</li>
         </ul>
 
-        <form>
+        <ul *ngIf="successDisplayed" class="success-messages">
+          <li>Registration successful</li>
+        </ul>
+
+        <form [formGroup]="mainForm">
           <fieldset class="form-group">
-            <input class="form-control form-control-lg" type="text" placeholder="Username" />
+            <input formControlName="username" class="form-control form-control-lg" type="text" placeholder="Username" />
           </fieldset>
           <fieldset class="form-group">
-            <input class="form-control form-control-lg" type="text" placeholder="Email" />
+            <input formControlName="email" class="form-control form-control-lg" type="text" placeholder="Email" />
           </fieldset>
           <fieldset class="form-group">
-            <input class="form-control form-control-lg" type="password" placeholder="Password" />
+            <input formControlName="password" class="form-control form-control-lg" type="password" placeholder="Password" />
           </fieldset>
-          <button class="btn btn-lg btn-primary pull-xs-right">Sign up</button>
+          <button [disabled]="!mainForm.valid" (click)="registerUser()"
+                  class="btn btn-lg btn-primary pull-xs-right">Sign up</button>
         </form>
       </div>
     </div>
