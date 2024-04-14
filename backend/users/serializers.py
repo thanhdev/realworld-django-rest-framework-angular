@@ -1,6 +1,15 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from users.models import User
+
+
+class UserUniqueValidator(UniqueValidator):
+    def __init__(self, field):
+        super().__init__(
+            queryset=User.objects.all(),
+            message=f'A user with that {field} already exists.'
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,7 +30,9 @@ class UserSerializer(serializers.ModelSerializer):
             'token', 'bio', 'image', 'username', 'email', 'password'
         ]
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True},
+            'email': {'validators': [UserUniqueValidator('email')]},
+            'username': {'validators': [UserUniqueValidator('username')]}
         }
 
 
