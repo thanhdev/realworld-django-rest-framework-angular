@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,14 +26,12 @@ SECRET_KEY = 'django-insecure-g&lp-p4!xc53=r_$1kup%#-bmpo4h+1$gw9@!2jp5a3y%t@sg9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    'thanhdev.pythonanywhere.com'
-]
+ALLOWED_HOSTS = []
 
 # Authentication
 AUTH_USER_MODEL = "users.User"
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=365),
     "AUTH_HEADER_TYPES": ("Bearer", "Token"),
 }
 
@@ -69,7 +67,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'static'],
+        'DIRS': [BASE_DIR / 'templates', ANGULAR_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,7 +82,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"http://localhost:.*",
+    r"http://127.0.0.1:.*",
+]
 CORS_URLS_REGEX = r"^/api/.*$"
 
 
@@ -133,7 +134,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'static/'
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     ANGULAR_DIR
