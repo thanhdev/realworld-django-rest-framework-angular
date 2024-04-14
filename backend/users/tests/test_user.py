@@ -28,7 +28,7 @@ class TestUserViewSet(APITestCase):
         self.assertEqual(user.username, self.data['username'])
         self.assertTrue(user.check_password(self.data['password']))
 
-    def test_create_user_with_existing_username(self):
+    def test_create_user_with_existing_email(self):
         # Arrange
         User.objects.create_user(**self.data)
 
@@ -38,8 +38,8 @@ class TestUserViewSet(APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["username"][0],
-            "A user with that username already exists."
+            response.data["email"][0],
+            "A user with that email already exists."
         )
 
     def test_login_user(self):
