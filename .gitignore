@@ -5,6 +5,10 @@
 /node_modules
 /dist
 
+# pycache
+__pycache__/
+*.pyc
+
 # IDEs and editors
 .idea
 .project
