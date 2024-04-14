@@ -5,3 +5,11 @@ export interface User {
   bio?: string;
   image?: string;
 }
+
+export interface CreateUserPayload {
+  user: {
+    email: string;
+    username: string;
+    password: string;
+  }
+}
