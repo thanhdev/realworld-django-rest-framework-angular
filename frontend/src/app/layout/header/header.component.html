@@ -1,34 +1,36 @@
 <nav class="navbar navbar-light">
   <div class="container">
-    <a class="navbar-brand" href="/">conduit</a>
+    <a class="navbar-brand" routerLink="/">conduit</a>
     <ul class="nav navbar-nav pull-xs-right">
       <li class="nav-item">
         <!-- TODO: Add "active" class when you're on that page" -->
-        <a class="nav-link active" href="/">Home</a>
+        <a class="nav-link active" routerLink="/">Home</a>
       </li>
-      <ng-container *ngIf="!currentUser">
-      <li class="nav-item">
-        <a class="nav-link" href="/login">Sign in</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/register">Sign up</a>
-      </li>
-      </ng-container>
 
-      <ng-container *ngIf="currentUser">
+
+      <ng-container *ngIf="(currentUser$ | async) as currentUser; else guestHeader">
         <li class="nav-item">
-          <a class="nav-link" href="/editor"> <i class="ion-compose"></i>&nbsp;New Article </a>
+          <a class="nav-link" routerLink="/editor"> <i class="ion-compose"></i>&nbsp;New Article </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/settings"> <i class="ion-gear-a"></i>&nbsp;Settings </a>
+          <a class="nav-link" routerLink="/settings"> <i class="ion-gear-a"></i>&nbsp;Settings </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/my-profile">
+          <a class="nav-link" routerLink="/my-profile">
             <img [src]="currentUser.image ?? ''" class="user-pic" alt="User profile image" />
             {{ currentUser.username }}
           </a>
         </li>
       </ng-container>
+
+      <ng-template #guestHeader>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">Sign in</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/register">Sign up</a>
+        </li>
+      </ng-template>
     </ul>
   </div>
 </nav>
