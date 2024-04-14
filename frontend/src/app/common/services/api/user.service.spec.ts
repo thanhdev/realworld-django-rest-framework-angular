@@ -43,4 +43,16 @@ describe('UserService', () => {
     service.registerUser(expectedPayload);
     expect(spyRequestHelperService.post).toHaveBeenCalledWith('/users', expectedPayload);
   });
+
+  it('should login user', ()=> {
+    const expectedPayload = {
+      user: {
+        email: 'a@hotmail.com',
+        password: 'thisIsPassword'
+      }
+    }
+
+    service.userLogin(expectedPayload);
+    expect(spyRequestHelperService.post).toHaveBeenCalledWith('/users/login', expectedPayload);
+  });
 });
