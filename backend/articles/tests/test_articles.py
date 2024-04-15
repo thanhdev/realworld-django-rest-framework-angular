@@ -230,14 +230,14 @@ class TestArticleViewSet(TestMixin, APITestCase):
         )
         self.assertEqual(json.loads(response.content)["articlesCount"], 3)
 
-    def test_feed_unauthenticated(self):
+    def test_get_feed_unauthenticated(self):
         # Act
         response = self.client.get(reverse_lazy("articles-feed"))
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_feed(self):
+    def test_get_feed(self):
         # Arrange
         self.celeb_user.followers.add(self.user)
         mixer.cycle(5).blend(Article, author=self.celeb_user)
@@ -255,3 +255,41 @@ class TestArticleViewSet(TestMixin, APITestCase):
             self.assertEqual(
                 article["author"]["username"], self.celeb_user.username
             )
+
+    def test_favorite_unauthenticated(self):
+        # Act
+        response = self.client.post(
+            reverse_lazy("articles-favorite", kwargs={"slug": "test-article"})
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_favorite_article(self):
+        # Arrange
+        url = reverse_lazy(
+            "articles-favorite", kwargs={"slug": self.article.slug}
+        )
+        self.client.force_authenticate(user=self.user)
+
+        # Act: Favorite
+        response = self.client.post(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(
+            self.article.favored_by.filter(pk=self.user.pk).exists()
+        )
+        self.assertEqual(response.data["favorited"], True)
+        self.assertEqual(response.data["favoritesCount"], 1)
+
+        # Act: Un-favorite
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(
+            self.article.favored_by.filter(pk=self.user.pk).exists()
+        )
+        self.assertEqual(response.data["favorited"], False)
+        self.assertEqual(response.data["favoritesCount"], 0)

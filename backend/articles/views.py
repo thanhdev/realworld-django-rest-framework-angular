@@ -53,6 +53,15 @@ class ArticleViewSet(
     def feed(self, request, *args, **kwargs):
         return self.list(self, request, *args, **kwargs)
 
+    @action(detail=True, methods=["POST", "DELETE"])
+    def favorite(self, request, *args, **kwargs):
+        article = self.get_object()
+        if request.method == "POST":
+            article.favored_by.add(request.user)
+        else:
+            article.favored_by.remove(request.user)
+        return Response(self.get_serializer(article).data)
+
 
 class TagListView(APIView):
     @staticmethod
