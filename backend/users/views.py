@@ -55,10 +55,10 @@ class ProfileViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         return super().get_queryset().exclude(pk=self.request.user.pk)
 
-    @action(detail=True, methods=["post"])
+    @action(detail=True, methods=["POST", "DELETE"])
     def follow(self, request, username=None):
         user = self.get_object()
-        if request.user.is_following(user):  # Unfollow
+        if request.method == "DELETE":  # Unfollow
             request.user.following.remove(user)
         else:  # Follow
             request.user.following.add(user)
