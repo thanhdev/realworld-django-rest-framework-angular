@@ -5,8 +5,12 @@ from django.utils.text import slugify
 
 
 class TagManager(models.Manager):
-    def get_counts(self):
-        return super().get_queryset().annotate(count=models.Count("articles"))
+    def popular_tags(self):
+        return (
+            self.get_queryset()
+            .annotate(count=models.Count("articles"))
+            .order_by("-count")[:10]
+        )
 
 
 class Tag(models.Model):

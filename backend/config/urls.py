@@ -20,7 +20,7 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
-from articles.views import ArticleViewSet
+from articles.views import ArticleViewSet, TagListView
 from users.views import UserViewSet, UserView, ProfileViewSet
 
 router = DefaultRouter(trailing_slash=False)
@@ -33,6 +33,7 @@ urlpatterns = [
     # APIs
     path("api/", include(router.urls)),
     path("api/user", UserView.as_view(), name="user"),
+    path("api/tags", TagListView.as_view(), name="tags-list"),
     # Frontend
     re_path(r"^(?:.*)$", TemplateView.as_view(template_name="index.html")),
 ]

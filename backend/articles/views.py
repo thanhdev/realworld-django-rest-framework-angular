@@ -6,10 +6,12 @@ from rest_framework.mixins import (
 )
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from articles.filters import ArticleFilter
-from articles.models import Article
+from articles.models import Article, Tag
 from articles.serializers import ArticleSerializer
 from utils import mixins
 
@@ -50,3 +52,12 @@ class ArticleViewSet(
     @action(detail=False)
     def feed(self, request, *args, **kwargs):
         return self.list(self, request, *args, **kwargs)
+
+
+class TagListView(APIView):
+    @staticmethod
+    def get(request):
+        popular_tags = Tag.objects.popular_tags()
+        return Response(
+            {"tags": list(popular_tags.values_list("name", flat=True))}
+        )
