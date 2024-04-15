@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 class TagManager(models.Manager):
     def get_counts(self):
-        return super().get_queryset().annotate(count=models.Count('articles'))
+        return super().get_queryset().annotate(count=models.Count("articles"))
 
 
 class Tag(models.Model):
@@ -29,11 +29,13 @@ class Article(models.Model):
     slug = models.SlugField(max_length=120, blank=True)
     description = models.CharField(max_length=255)
     body = models.TextField()
-    tag_list = models.ManyToManyField(Tag, related_name='articles', blank=True)
-    author = models.ForeignKey('users.User', on_delete=models.CASCADE,
-                               related_name='articles')
-    favored_by = models.ManyToManyField('users.User',
-                                        related_name='favorite_articles')
+    tag_list = models.ManyToManyField(Tag, related_name="articles", blank=True)
+    author = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="articles"
+    )
+    favored_by = models.ManyToManyField(
+        "users.User", related_name="favorite_articles"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -47,10 +49,12 @@ def article_pre_save(sender, instance, **kwargs):
 
 
 class Comment(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE,
-                                related_name='comments')
-    author = models.ForeignKey('users.User', on_delete=models.CASCADE,
-                               related_name='comments')
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, related_name="comments"
+    )
+    author = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="comments"
+    )
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

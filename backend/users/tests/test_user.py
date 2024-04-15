@@ -17,7 +17,7 @@ class TestUserViewSet(APITestCase):
 
     def test_create_user(self):
         # Act
-        response = self.client.post(self.url, {'user': self.data})
+        response = self.client.post(self.url, {"user": self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -25,25 +25,24 @@ class TestUserViewSet(APITestCase):
         self.assertIsNone(response.data.get("password"))
         self.assertEqual(User.objects.count(), 1)
         user = User.objects.first()
-        self.assertEqual(user.username, self.data['username'])
-        self.assertTrue(user.check_password(self.data['password']))
+        self.assertEqual(user.username, self.data["username"])
+        self.assertTrue(user.check_password(self.data["password"]))
 
     def test_create_user_with_existing_email_and_username(self):
         # Arrange
         User.objects.create_user(**self.data)
 
         # Act
-        response = self.client.post(self.url, {'user': self.data})
+        response = self.client.post(self.url, {"user": self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["email"][0],
-            "A user with that email already exists."
+            response.data["email"][0], "A user with that email already exists."
         )
         self.assertEqual(
             response.data["username"][0],
-            "A user with that username already exists."
+            "A user with that username already exists.",
         )
 
     def test_login_user(self):
@@ -51,7 +50,7 @@ class TestUserViewSet(APITestCase):
         User.objects.create_user(**self.data)
 
         # Act
-        response = self.client.post(self.login_url, {'user': self.data})
+        response = self.client.post(self.login_url, {"user": self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -60,13 +59,12 @@ class TestUserViewSet(APITestCase):
 
     def test_login_user_with_invalid_credentials(self):
         # Act
-        response = self.client.post(self.login_url, {'user': self.data})
+        response = self.client.post(self.login_url, {"user": self.data})
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0],
-            "Invalid email or password"
+            response.data["non_field_errors"][0], "Invalid email or password"
         )
 
 
@@ -107,16 +105,15 @@ class TestUserView(TestMixin, APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.admin_user.refresh_from_db()
-        self.assertTrue(self.admin_user.check_password(data['password']))
-        self.assertEqual(self.admin_user.username, data['username'])
-        self.assertEqual(self.admin_user.email, data['email'])
-        self.assertEqual(self.admin_user.bio, data['bio'])
+        self.assertTrue(self.admin_user.check_password(data["password"]))
+        self.assertEqual(self.admin_user.username, data["username"])
+        self.assertEqual(self.admin_user.email, data["email"])
+        self.assertEqual(self.admin_user.bio, data["bio"])
 
     def test_update_user_with_existing_email(self):
         # Arrange
         data = dict(
-            username=self.admin_user.username,
-            email=self.celeb_user.email
+            username=self.admin_user.username, email=self.celeb_user.email
         )
         self.client.force_authenticate(self.admin_user)
 
@@ -126,7 +123,6 @@ class TestUserView(TestMixin, APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["email"][0],
-            "A user with that email already exists."
+            response.data["email"][0], "A user with that email already exists."
         )
         self.assertIsNone(response.data.get("username"))

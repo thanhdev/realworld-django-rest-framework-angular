@@ -8,17 +8,19 @@ from users.serializers import ProfileSerializer
 class ArticleSerializer(serializers.ModelSerializer):
     tagList = serializers.ListField(
         child=serializers.CharField(max_length=120),
-        write_only=True, allow_null=True, allow_empty=True,
-        source='tag_list'
+        write_only=True,
+        allow_null=True,
+        allow_empty=True,
+        source="tag_list",
     )
     author = ProfileSerializer(read_only=True)
-    createdAt = serializers.DateTimeField(source='created_at', read_only=True)
-    updatedAt = serializers.DateTimeField(source='updated_at', read_only=True)
+    createdAt = serializers.DateTimeField(source="created_at", read_only=True)
+    updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
     favorited = serializers.SerializerMethodField()
     favoritesCount = serializers.SerializerMethodField()
 
     def get_favorited(self, instance):
-        user = self.context['request'].user
+        user = self.context["request"].user
         if user.is_anonymous:
             return False
         return instance.favored_by.filter(pk=user.pk).exists()
@@ -35,16 +37,28 @@ class ArticleSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        validated_data['author'] = self.context['request'].user
+        validated_data["author"] = self.context["request"].user
         return super(ArticleSerializer, self).create(validated_data)
 
     def to_representation(self, instance):
         data = super(ArticleSerializer, self).to_representation(instance)
-        data['tagList'] = list(instance.tag_list.values_list('name', flat=True))
+        data["tagList"] = list(
+            instance.tag_list.values_list("name", flat=True)
+        )
         return data
 
     class Meta:
         model = Article
-        fields = ['title', 'slug', 'description', 'body', 'tagList', 'author',
-                  'createdAt', 'updatedAt', 'favorited', 'favoritesCount']
-        read_only_fields = ['slug']
+        fields = [
+            "title",
+            "slug",
+            "description",
+            "body",
+            "tagList",
+            "author",
+            "createdAt",
+            "updatedAt",
+            "favorited",
+            "favoritesCount",
+        ]
+        read_only_fields = ["slug"]

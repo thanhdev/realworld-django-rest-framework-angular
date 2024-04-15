@@ -5,8 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from users.models import User
-from users.serializers import (UserSerializer, LoginSerializer,
-                               ProfileSerializer)
+from users.serializers import (
+    UserSerializer,
+    LoginSerializer,
+    ProfileSerializer,
+)
 from utils.mixins import CreateModelMixin
 
 
@@ -25,7 +28,7 @@ class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
 
 
 class UserView(views.APIView):
-    object_name = 'user'
+    object_name = "user"
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
@@ -42,9 +45,9 @@ class UserView(views.APIView):
 
 
 class ProfileViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
-    object_name = 'profile'
-    lookup_url_kwarg = 'username'
-    lookup_field = 'username'
+    object_name = "profile"
+    lookup_url_kwarg = "username"
+    lookup_field = "username"
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
@@ -52,7 +55,7 @@ class ProfileViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         return super().get_queryset().exclude(pk=self.request.user.pk)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def follow(self, request, username=None):
         user = self.get_object()
         if request.user.is_following(user):  # Unfollow

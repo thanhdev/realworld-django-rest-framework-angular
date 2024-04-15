@@ -54,9 +54,7 @@ class TestArticleViewSet(TestMixin, APITestCase):
         self.assertEqual(author["following"], False)
 
         self.assertEqual(self.celeb_user.articles.count(), 2)
-        article = self.celeb_user.articles.filter(
-            slug="test-title"
-        ).first()
+        article = self.celeb_user.articles.filter(slug="test-title").first()
         self.assertIsNotNone(article)
         self.assertEqual(article.title, self.data["title"])
         self.assertEqual(article.description, self.data["description"])
@@ -79,22 +77,31 @@ class TestArticleViewSet(TestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["title"][0],
-            "article with this title already exists."
+            "article with this title already exists.",
         )
 
     def test_get_article(self):
         # Arrange
-        url = reverse_lazy("articles-detail",
-                           kwargs={"slug": self.article.slug})
+        url = reverse_lazy(
+            "articles-detail", kwargs={"slug": self.article.slug}
+        )
 
         # Act
         response = self.client.get(url)
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        for key in ["title", "description", "body", "tagList", "author",
-                    "createdAt", "updatedAt", "favorited",
-                    "favoritesCount"]:
+        for key in [
+            "title",
+            "description",
+            "body",
+            "tagList",
+            "author",
+            "createdAt",
+            "updatedAt",
+            "favorited",
+            "favoritesCount",
+        ]:
             self.assertIsNotNone(response.data.get(key))
 
     def test_update_article(self):
@@ -105,7 +112,9 @@ class TestArticleViewSet(TestMixin, APITestCase):
             "body": "New Body",
             "tagList": ["new"],
         }
-        url = reverse_lazy("articles-detail", kwargs={"slug": self.article.slug})
+        url = reverse_lazy(
+            "articles-detail", kwargs={"slug": self.article.slug}
+        )
         self.client.force_authenticate(user=self.celeb_user)
 
         # Act
@@ -118,13 +127,16 @@ class TestArticleViewSet(TestMixin, APITestCase):
         self.assertEqual(self.article.slug, "new-title")
         self.assertEqual(self.article.description, new_data["description"])
         self.assertEqual(self.article.body, new_data["body"])
-        tag_list = list(self.article.tag_list.all().values_list("name", flat=True))
+        tag_list = list(
+            self.article.tag_list.all().values_list("name", flat=True)
+        )
         self.assertEqual(tag_list, new_data["tagList"])
 
     def test_update_article_not_owned(self):
         # Arrange
-        url = reverse_lazy("articles-detail",
-                           kwargs={"slug": self.article.slug})
+        url = reverse_lazy(
+            "articles-detail", kwargs={"slug": self.article.slug}
+        )
         self.client.force_authenticate(user=self.user)
 
         # Act
@@ -135,8 +147,9 @@ class TestArticleViewSet(TestMixin, APITestCase):
 
     def test_delete_article(self):
         # Arrange
-        url = reverse_lazy("articles-detail",
-                           kwargs={"slug": self.article.slug})
+        url = reverse_lazy(
+            "articles-detail", kwargs={"slug": self.article.slug}
+        )
         self.client.force_authenticate(user=self.celeb_user)
 
         # Act
@@ -145,11 +158,15 @@ class TestArticleViewSet(TestMixin, APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(self.celeb_user.articles.count(), 0)
-        self.assertFalse(Article.objects.filter(slug=self.article.slug).exists())
+        self.assertFalse(
+            Article.objects.filter(slug=self.article.slug).exists()
+        )
 
     def test_delete_article_not_owned(self):
         # Arrange
-        url = reverse_lazy("articles-detail", kwargs={"slug": self.article.slug})
+        url = reverse_lazy(
+            "articles-detail", kwargs={"slug": self.article.slug}
+        )
         self.client.force_authenticate(user=self.user)
 
         # Act
@@ -158,7 +175,9 @@ class TestArticleViewSet(TestMixin, APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(self.celeb_user.articles.count(), 1)
-        self.assertTrue(Article.objects.filter(slug=self.article.slug).exists())
+        self.assertTrue(
+            Article.objects.filter(slug=self.article.slug).exists()
+        )
 
     def test_list_articles(self):
         # Arrange
@@ -188,10 +207,14 @@ class TestArticleViewSet(TestMixin, APITestCase):
 
     def test_list_articles_with_filters(self):
         # Arrange
-        mixer.cycle(5).blend(Article, tag_list=[Tag.objects.create(name="A")],
-                             author=self.celeb_user)
-        mixer.cycle(10).blend(Article, tag_list=[Tag.objects.create(name="B")],
-                              author=self.user)
+        mixer.cycle(5).blend(
+            Article,
+            tag_list=[Tag.objects.create(name="A")],
+            author=self.celeb_user,
+        )
+        mixer.cycle(10).blend(
+            Article, tag_list=[Tag.objects.create(name="B")], author=self.user
+        )
         for article in Article.objects.all()[:3]:
             article.favored_by.add(self.user)
 
@@ -202,7 +225,9 @@ class TestArticleViewSet(TestMixin, APITestCase):
         response = self.client.get(self.url + f"?author={self.user.username}")
         self.assertEqual(json.loads(response.content)["articlesCount"], 10)
         # Filter by favorited
-        response = self.client.get(self.url + f"?favorited={self.user.username}")
+        response = self.client.get(
+            self.url + f"?favorited={self.user.username}"
+        )
         self.assertEqual(json.loads(response.content)["articlesCount"], 3)
 
     def test_feed_unauthenticated(self):
@@ -227,5 +252,6 @@ class TestArticleViewSet(TestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data["articlesCount"], 6)
         for article in data["articles"]:
-            self.assertEqual(article["author"]["username"],
-                             self.celeb_user.username)
+            self.assertEqual(
+                article["author"]["username"], self.celeb_user.username
+            )
