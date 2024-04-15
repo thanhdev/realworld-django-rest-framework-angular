@@ -19,11 +19,13 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
+from articles.views import ArticleViewSet
 from users.views import UserViewSet, UserView, ProfileViewSet
 
 router = DefaultRouter(trailing_slash=False)
 router.register("users", UserViewSet, basename="users")
 router.register("profiles", ProfileViewSet, basename="profiles")
+router.register("articles", ArticleViewSet, basename="articles")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -52,6 +52,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     following = serializers.SerializerMethodField()
 
     def get_following(self, user):
+        if self.context['request'].user.is_anonymous:
+            return False
         return self.context['request'].user.is_following(user)
 
     class Meta:
