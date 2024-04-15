@@ -13,3 +13,8 @@ class TestMixin:
             email="celeb_user@gmail.com",
             password="password123",
         )
+        self.user = User.objects.create_user(
+            username="user",
+            email="user@gmail.com",
+            password="password123",
+        )

@@ -13,7 +13,7 @@ import { Router } from "@angular/router";
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  public errorDisplayed = false;
+  public errors = {};
 
   public mainForm: FormGroup<LoginFormViewModel>;
 
@@ -47,7 +47,7 @@ export class LoginComponent {
         this._router.navigateByUrl('/');
       },
       error: (err: HttpErrorResponse) => {
-        this.errorDisplayed = true;
+        this.errors = err.error.errors;
       }
     });
   }

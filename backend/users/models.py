@@ -7,6 +7,7 @@ class User(AbstractUser):
     """
     Default custom user model for Conduit.
     """
+
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
     username = models.CharField(max_length=150, unique=True)

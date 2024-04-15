@@ -4,16 +4,10 @@
       <div class="col-md-6 offset-md-3 col-xs-12">
         <h1 class="text-xs-center">Sign up</h1>
         <p class="text-xs-center">
-          <a href="/login">Have an account?</a>
+          <a routerLink="/login">Have an account?</a>
         </p>
 
-        <ul *ngIf="errors['email'] && !mainForm.pristine" class="error-messages">
-          <li *ngFor="let err of errors['email']">{{ err }}</li>
-        </ul>
-
-        <ul *ngIf="errors['username'] && !mainForm.pristine" class="error-messages">
-          <li *ngFor="let err of errors['username']">{{ err }}</li>
-        </ul>
+        <app-error-message [errors]="errors"></app-error-message>
 
         <ul *ngIf="successDisplayed && mainForm.pristine" class="success-messages">
           <li>Registration successful</li>
@@ -22,13 +16,19 @@
         <form [formGroup]="mainForm">
           <fieldset class="form-group">
             <input formControlName="username" class="form-control form-control-lg" type="text" placeholder="Username" />
+            <app-error-message [form]="mainForm.controls.username"></app-error-message>
           </fieldset>
+
           <fieldset class="form-group">
             <input formControlName="email" class="form-control form-control-lg" type="text" placeholder="Email" />
+            <app-error-message [form]="mainForm.controls.email"></app-error-message>
           </fieldset>
+
           <fieldset class="form-group">
             <input formControlName="password" class="form-control form-control-lg" type="password" placeholder="Password" />
+            <app-error-message [form]="mainForm.controls.password"></app-error-message>
           </fieldset>
+
           <button [disabled]="!mainForm.valid" (click)="registerUser()"
                   class="btn btn-lg btn-primary pull-xs-right">Sign up</button>
         </form>
