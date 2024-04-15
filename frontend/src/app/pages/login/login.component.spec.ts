@@ -8,6 +8,7 @@ import { UserService } from "../../common/services/api/user.service";
 import { Router } from "@angular/router";
 import { LoginUserPayload, User } from "../../common/models/api/user.model";
 import { of } from "rxjs";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -45,6 +46,9 @@ describe('LoginComponent', () => {
         AuthenticationService,
         {provide: UserService, useValue: spyUserService },
         {provide: Router, useValue: spyRouter}
+      ],
+      schemas:[
+        CUSTOM_ELEMENTS_SCHEMA
       ]
     })
     .compileComponents();

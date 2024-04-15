@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { UserService } from "../../common/services/api/user.service";
 import { of } from "rxjs";
 import { ReactiveFormsModule } from "@angular/forms";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -28,6 +29,9 @@ describe('RegisterComponent', () => {
       ],
       providers: [
         {provide: UserService, useValue: spyUserService }
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
       ]
     })
     .compileComponents();
