@@ -1,7 +1,7 @@
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from articles.models import Article, Tag
+from articles.models import Article, Tag, Comment
 from users.serializers import ProfileSerializer
 
 
@@ -18,6 +18,15 @@ class ArticleSerializer(serializers.ModelSerializer):
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
     favorited = serializers.SerializerMethodField()
     favoritesCount = serializers.SerializerMethodField()
+
+    def __init__(self, *args, **kwargs):
+        super(ArticleSerializer, self).__init__(*args, **kwargs)
+        # If updating, set the fields to not required
+        if self.instance is not None:
+            self.fields["title"].required = False
+            self.fields["description"].required = False
+            self.fields["body"].required = False
+            self.fields["tagList"].required = False
 
     def get_favorited(self, instance):
         user = self.context["request"].user
@@ -43,7 +52,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super(ArticleSerializer, self).to_representation(instance)
         data["tagList"] = list(
-            instance.tag_list.values_list("name", flat=True)
+            sorted(instance.tag_list.values_list("name", flat=True))
         )
         return data
 
@@ -62,3 +71,14 @@ class ArticleSerializer(serializers.ModelSerializer):
             "favoritesCount",
         ]
         read_only_fields = ["slug"]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(read_only=True)
+    createdAt = serializers.DateTimeField(source="created_at", read_only=True)
+    updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ["id", "body", "author", "createdAt", "updatedAt"]
+        read_only_fields = ["id"]
