@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {RequestHelperService} from "../utils/request-helper.service";
+import { RequestHelperService } from "../utils/request-helper.service";
 import { CreateUserPayload, LoginUserPayload, LoginUserResponse } from "../../models/api/user.model";
-import {Observable} from "rxjs";
+import { Observable } from "rxjs";
+import { ProfileResponse } from "../../models/api/profile.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,4 +20,10 @@ export class UserService {
   public userLogin(payload: LoginUserPayload): Observable<LoginUserResponse> {
     return this._requestHelper.post('/users/login', payload);
   }
+
+  public getCurrentUser(): Observable<LoginUserResponse> {
+    return this._requestHelper.get('/user');
+  }
+
+
 }

@@ -4,6 +4,9 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from "@angular/forms";
+import { SharedModule } from "../shared/shared.module";
+import { RouterModule } from "@angular/router";
+import { UserSettingsComponent } from './user-settings/user-settings.component';
 
 
 
@@ -11,11 +14,14 @@ import { ReactiveFormsModule } from "@angular/forms";
   declarations: [
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    UserSettingsComponent
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule,
+    SharedModule
   ],
   exports: [
     LoginComponent,

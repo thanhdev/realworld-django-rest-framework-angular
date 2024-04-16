@@ -9,8 +9,18 @@ export class AuthenticationService {
 
   private _currentUser$ = new BehaviorSubject<User | null>(null);
 
+  constructor() {
+    if (this.currentUserToken) {
+      this.updateCurrentUser({token: this.currentUserToken} as User);
+    }
+  }
+
   public currentUser$(): Observable<User | null> {
     return this._currentUser$.asObservable();
+  }
+
+  public get currentUserToken(): string {
+    return localStorage.getItem('token') || '';
   }
 
   public login(user: User) {
@@ -21,5 +31,9 @@ export class AuthenticationService {
   public logout() {
     localStorage.removeItem('token');
     this._currentUser$.next(null);
+  }
+
+  public updateCurrentUser(user: User) {
+    this._currentUser$.next(user);
   }
 }

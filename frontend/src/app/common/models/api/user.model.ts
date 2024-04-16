@@ -24,3 +24,13 @@ export interface LoginUserPayload {
 export interface LoginUserResponse {
   user: User;
 }
+
+export interface UpdateUserPayload  {
+  user: {
+    email?: string;
+    username?: string;
+    bio?: string;
+    image?: string;
+    password?: string;
+  }
+}
