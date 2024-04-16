@@ -28,7 +28,7 @@ export class HeaderComponent {
     private readonly _userService: UserService
   ) {
     // Get the current user from authentication service
-    this.currentUser$ = this._authenticationService.currentUser$();
+    this.currentUser$ = this._authenticationService.currentUser$;
 
     this._subscribeToUserChanges();
     this._loadCurrentUser();

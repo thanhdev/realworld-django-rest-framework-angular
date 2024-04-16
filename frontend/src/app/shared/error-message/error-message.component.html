@@ -1,0 +1,36 @@
+<ul class="error-messages">
+  <ng-container *ngIf="form?.errors">
+    <li *ngFor="let error of form?.errors | keyvalue">
+      <ng-container *ngTemplateOutlet="formErrorMsg; context: { key: error.key, value: error.value }"></ng-container>
+    </li>
+  </ng-container>
+
+  <ng-container *ngIf="errors">
+    <ng-container *ngFor="let error of errors | keyvalue">
+      <li>{{error.value}}</li>
+    </ng-container>
+  </ng-container>
+
+</ul>
+
+<ng-template #formErrorMsg let-key="key" let-value="value">
+  <ng-container *ngIf="value">
+    <ng-container [ngSwitch]="key">
+      <ng-container *ngSwitchCase="'required'">
+        Field is required
+      </ng-container>
+      <ng-container *ngSwitchCase="'minlength'">
+        Field is too short
+      </ng-container>
+      <ng-container *ngSwitchCase="'maxlength'">
+        Field is too long
+      </ng-container>
+      <ng-container *ngSwitchCase="'email'">
+        Invalid email
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        Field is invalid
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>

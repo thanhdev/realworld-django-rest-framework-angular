@@ -64,7 +64,7 @@ class TestProfileViewSet(TestMixin, APITestCase):
         )
 
         # Act
-        response = self.client.post(url)
+        response = self.client.delete(url)
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)

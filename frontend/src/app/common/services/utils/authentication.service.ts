@@ -15,7 +15,7 @@ export class AuthenticationService {
     }
   }
 
-  public currentUser$(): Observable<User | null> {
+  public get currentUser$(): Observable<User | null> {
     return this._currentUser$.asObservable();
   }
 

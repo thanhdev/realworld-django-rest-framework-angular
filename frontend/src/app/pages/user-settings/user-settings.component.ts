@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { Router } from "@angular/router";
-import { filter } from "rxjs";
 import { User } from "../../common/models/api/user.model";
+import { FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'app-user-settings',
@@ -12,7 +12,7 @@ import { User } from "../../common/models/api/user.model";
 export class UserSettingsComponent {
 
   public errors = {};
-  public mainForm;
+  public mainForm = new FormGroup({});
 
   constructor(
     private readonly _authenticationService: AuthenticationService,
@@ -21,8 +21,10 @@ export class UserSettingsComponent {
   }
 
   private _subscribeToUserChanges(): void {
-    this._authenticationService.currentUser$().pipe(filter(user => !!user)).subscribe((user) => {
-      this._bindFormData(user);
+    this._authenticationService.currentUser$.subscribe((user) => {
+      if (user) {
+        this._bindFormData(user);
+      }
     });
   }
 
