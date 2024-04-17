@@ -9,12 +9,6 @@ export class AuthenticationService {
 
   private _currentUser$ = new BehaviorSubject<User | null>(null);
 
-  constructor() {
-    if (this.currentUserToken) {
-      this.updateCurrentUser({token: this.currentUserToken} as User);
-    }
-  }
-
   public get currentUser$(): Observable<User | null> {
     return this._currentUser$.asObservable();
   }
@@ -33,7 +27,4 @@ export class AuthenticationService {
     this._currentUser$.next(null);
   }
 
-  public updateCurrentUser(user: User) {
-    this._currentUser$.next(user);
-  }
 }

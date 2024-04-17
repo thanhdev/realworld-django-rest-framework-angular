@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RequestHelperService } from "../utils/request-helper.service";
-import { CreateUserPayload, LoginUserPayload, LoginUserResponse } from "../../models/api/user.model";
+import { CreateUserPayload, LoginUserPayload, LoginUserResponse, UpdateUserPayload } from "../../models/api/user.model";
 import { Observable } from "rxjs";
 import { ProfileResponse } from "../../models/api/profile.model";
 
@@ -25,5 +25,7 @@ export class UserService {
     return this._requestHelper.get('/user');
   }
 
-
+  public updateUser(payload: UpdateUserPayload): Observable<LoginUserResponse> {
+    return this._requestHelper.put('/user', payload);
+  }
 }

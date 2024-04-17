@@ -4,36 +4,44 @@
       <div class="col-md-6 offset-md-3 col-xs-12">
         <h1 class="text-xs-center">Your Settings</h1>
 
-        <ul class="error-messages">
-          <li>That name is required</li>
+        <ul *ngIf="displaySuccessMessage && mainForm.pristine" class="success-messages">
+          <li>Updated successfully!</li>
         </ul>
 
-        <form>
+        <app-error-message [errors]="errors"></app-error-message>
+
+        <form [formGroup]="mainForm">
           <fieldset>
             <fieldset class="form-group">
-              <input class="form-control form-control-lg" type="text" placeholder="URL of profile picture" />
+              <input formControlName="image" class="form-control form-control-lg" type="text" placeholder="URL of profile picture" />
+              <app-error-message [form]="mainForm.controls.image"></app-error-message>
             </fieldset>
             <fieldset class="form-group">
-              <input class="form-control form-control-lg" type="text" placeholder="Your Name" />
+              <input formControlName="username" class="form-control form-control-lg" type="text" placeholder="Your Name" />
+              <app-error-message [form]="mainForm.controls.username"></app-error-message>
             </fieldset>
             <fieldset class="form-group">
-              <textarea
+              <textarea formControlName="bio"
                 class="form-control form-control-lg"
                 rows="8"
                 placeholder="Short bio about you"
               ></textarea>
+              <app-error-message [form]="mainForm.controls.bio"></app-error-message>
             </fieldset>
             <fieldset class="form-group">
-              <input class="form-control form-control-lg" type="text" placeholder="Email" />
+              <input formControlName="email" class="form-control form-control-lg" type="text" placeholder="Email" />
+              <app-error-message [form]="mainForm.controls.email"></app-error-message>
             </fieldset>
             <fieldset class="form-group">
-              <input
+              <input formControlName="password"
                 class="form-control form-control-lg"
                 type="password"
                 placeholder="New Password"
               />
             </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
+            <app-error-message [form]="mainForm.controls.password"></app-error-message>
+
+            <button [disabled]="!mainForm.valid" (click)="updateProfile()" class="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
           </fieldset>
         </form>
         <hr />

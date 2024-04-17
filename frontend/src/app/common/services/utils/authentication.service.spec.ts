@@ -27,7 +27,7 @@ describe('AuthenticationService', () => {
     }
 
     service.login(expectedUser);
-    service.currentUser$().subscribe(user => {
+    service.currentUser$.subscribe(user => {
       expect(user).toEqual(expectedUser);
       expect(localStorage.getItem('token')).toEqual(expectedUser.token);
       done();
@@ -36,7 +36,7 @@ describe('AuthenticationService', () => {
 
   it('should logout and remove token from local storage', (done: DoneFn)=> {
     service.logout();
-    service.currentUser$().subscribe(user => {
+    service.currentUser$.subscribe(user => {
       expect(user).toBeNull();
       expect(localStorage.getItem('token')).toBeNull();
       done();

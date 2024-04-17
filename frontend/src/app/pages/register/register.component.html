@@ -9,8 +9,8 @@
 
         <app-error-message [errors]="errors"></app-error-message>
 
-        <ul *ngIf="successDisplayed && mainForm.pristine" class="success-messages">
-          <li>Registration successful</li>
+        <ul *ngIf="successDisplayed" class="success-messages">
+          <li>Registration successful. Redirecting to login page...</li>
         </ul>
 
         <form [formGroup]="mainForm">

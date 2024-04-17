@@ -7,7 +7,7 @@
         <li *ngFor="let menu of menuItems" class="nav-item" (click)="setActiveMenuItem(menu.name)">
           <ng-container *ngIf="menu.customDisplay == 'Profile'">
             <a class="nav-link" [ngClass]="{'active': menu.isActive}" [routerLink]="menu.link">
-            <img [src]="currentUser.image ?? defaultProfileImg" class="user-pic" alt="User profile image" />
+            <img [src]="currentUser.image || defaultProfileImg" class="user-pic" alt="User profile image" />
             {{ currentUser.username }}
             </a>
           </ng-container>
