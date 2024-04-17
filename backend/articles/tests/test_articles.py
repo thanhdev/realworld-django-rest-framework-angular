@@ -74,7 +74,9 @@ class TestArticleViewSet(TestMixin, APITestCase):
         response = self.client.post(self.url, {"article": data})
 
         # Assert
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
         self.assertEqual(
             response.data["title"][0],
             "article with this title already exists.",
@@ -131,6 +133,22 @@ class TestArticleViewSet(TestMixin, APITestCase):
             self.article.tag_list.all().values_list("name", flat=True)
         )
         self.assertEqual(tag_list, new_data["tagList"])
+
+    def test_update_article_partial(self):
+        # Arrange
+        new_data = {"title": "New Title"}
+        url = reverse_lazy(
+            "articles-detail", kwargs={"slug": self.article.slug}
+        )
+        self.client.force_authenticate(user=self.celeb_user)
+
+        # Act
+        response = self.client.patch(url, {"article": new_data})
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.article.refresh_from_db()
+        self.assertEqual(self.article.title, new_data["title"])
 
     def test_update_article_not_owned(self):
         # Arrange

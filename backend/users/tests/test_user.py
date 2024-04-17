@@ -36,7 +36,9 @@ class TestUserViewSet(APITestCase):
         response = self.client.post(self.url, {"user": self.data})
 
         # Assert
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
         self.assertEqual(
             response.data["email"][0], "A user with that email already exists."
         )
@@ -62,7 +64,9 @@ class TestUserViewSet(APITestCase):
         response = self.client.post(self.login_url, {"user": self.data})
 
         # Assert
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
         self.assertEqual(
             response.data["non_field_errors"][0], "Invalid email or password"
         )
@@ -121,7 +125,9 @@ class TestUserView(TestMixin, APITestCase):
         response = self.client.put(self.url, {"user": data})
 
         # Assert
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
         self.assertEqual(
             response.data["email"][0], "A user with that email already exists."
         )

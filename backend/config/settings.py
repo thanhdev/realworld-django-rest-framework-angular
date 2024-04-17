@@ -154,8 +154,7 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend"
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 20,
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_RENDERER_CLASSES": [
         "config.renderers.CustomJSONRenderer",
