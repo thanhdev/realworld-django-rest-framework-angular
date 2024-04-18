@@ -8,6 +8,7 @@ import { SharedModule } from "../shared/shared.module";
 import { RouterModule } from "@angular/router";
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { EditorComponent } from './editor/editor.component';
+import { FeedComponent } from './home/feed/feed.component';
 
 
 
@@ -17,7 +18,8 @@ import { EditorComponent } from './editor/editor.component';
     RegisterComponent,
     HomeComponent,
     UserSettingsComponent,
-    EditorComponent
+    EditorComponent,
+    FeedComponent
   ],
   imports: [
     CommonModule,

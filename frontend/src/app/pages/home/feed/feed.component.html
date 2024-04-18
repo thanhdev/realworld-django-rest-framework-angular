@@ -1,0 +1,42 @@
+<ng-container *ngIf="articles.length; else noArticle"></ng-container>
+<div class="article-preview" *ngFor="let article of articles">
+  <ng-container *ngTemplateOutlet="articleMeta; context: { $implicit: article }"></ng-container>
+  <ng-container *ngTemplateOutlet="articlePreview; context: { $implicit: article }"></ng-container>
+</div>
+
+<ul class="pagination">
+  <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [ngClass]="{'active': i == activePageIndex}">
+    <a class="page-link" (click)="loadPagingData(i)">{{ i + 1 }}</a>
+  </li>
+</ul>
+
+<ng-template #noArticle>
+  <div class="article-preview">
+    No articles are here... yet.
+  </div>
+</ng-template>
+
+<ng-template #articleMeta let-article>
+  <div class="article-meta">
+    <a routerLink="/profile/{{article.author.username}}"><img [src]="article.image || DEFAULT_PROFILE_IMAGE" /></a>
+    <div class="info">
+      <a routerLink="/profile/{{article.author.username}}" class="author">{{ article.author.username }}</a>
+      <span class="date">{{ article.updatedAt | date }}</span>
+    </div>
+    <button class="btn btn-outline-primary btn-sm pull-xs-right">
+      <i class="ion-heart"></i> {{ article.favoritesCount }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #articlePreview let-article>
+  <a routerLink="/article/{{article.slug}}" class="preview-link">
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.description }}</p>
+    <span>Read more...</span>
+
+    <ul class="tag-list">
+      <li *ngFor="let tag of article.tagList" class="tag-default tag-pill tag-outline">{{ tag }}</li>
+    </ul>
+  </a>
+</ng-template>

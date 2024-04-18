@@ -1,6 +1,6 @@
 <nav class="navbar navbar-light">
   <div class="container">
-    <a class="navbar-brand" routerLink="/">conduit</a>
+    <a class="navbar-brand" (click)="setActiveMenuItem(menuItems[0].name)" routerLink="/">conduit</a>
     <ul class="nav navbar-nav pull-xs-right">
 
       <ng-container *ngIf="(currentUser$ | async) as currentUser; else guestHeader">

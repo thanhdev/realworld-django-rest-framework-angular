@@ -1,3 +1,6 @@
+import { UserProfile } from "./profile.model";
+import { QueryPaginationParams } from "./query-pagination.model";
+
 export interface Article {
   slug: string;
   title: string;
@@ -8,11 +11,18 @@ export interface Article {
   updatedAt: string;
   favorited: boolean;
   favoritesCount: number;
+  author: UserProfile;
 }
 
 
 export interface ArticleResponse {
   article: Article;
+}
+
+export interface QueryArticlesParams extends QueryPaginationParams {
+  tag?: string;
+  author?: string;
+  favorited?: string;
 }
 
 export interface ArticlesResponse {
@@ -30,12 +40,7 @@ export interface CreateArticlePayload {
 }
 
 export interface UpdateArticlePayload {
-  article: {
-    title?: string;
-    description?: string;
-    body?: string;
-    tagList?: string[];
-  }
+  article: Partial<CreateArticlePayload['article']>
 }
 
 

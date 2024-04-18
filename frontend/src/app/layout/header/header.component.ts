@@ -3,6 +3,7 @@ import { LoginUserResponse, User } from "../../common/models/api/user.model";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { Observable } from "rxjs";
 import { UserService } from "../../common/services/api/user.service";
+import { DEFAULT_PROFILE_IMAGE } from "../../common/constants/default.constant";
 
 interface MenuItem {
   name: string;
@@ -21,7 +22,7 @@ export class HeaderComponent {
   public currentUser$: Observable<User | null>;
 
   public menuItems: MenuItem[] = [];
-  public defaultProfileImg = 'https://static.productionready.io/images/smiley-cyrus.jpg';
+  public readonly defaultProfileImg = DEFAULT_PROFILE_IMAGE;
 
   constructor(
     private readonly _authenticationService: AuthenticationService,
