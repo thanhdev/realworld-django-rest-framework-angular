@@ -2,6 +2,7 @@
   <div class="container page">
     <div class="row">
       <div class="col-md-10 offset-md-1 col-xs-12">
+        <h1 class="text-xs-center">Article editor</h1>
 
         <ul *ngIf="displaySuccessMessage && mainForm.pristine" class="success-messages">
           <li>Published successfully!</li>
@@ -12,7 +13,7 @@
         <form [formGroup]="mainForm">
           <fieldset>
             <fieldset class="form-group">
-              <input formControlName="title" type="text" class="form-control form-control-lg" placeholder="Article Title" />
+              <input formControlName="title" type="text" class="form-control" placeholder="Article Title" />
               <app-error-message [form]="mainForm.controls.title"></app-error-message>
             </fieldset>
             <fieldset class="form-group">

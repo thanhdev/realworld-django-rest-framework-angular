@@ -1,5 +1,5 @@
 <ul class="error-messages">
-  <ng-container *ngIf="form?.errors">
+  <ng-container *ngIf="form?.errors && form?.touched">
     <li *ngFor="let error of form?.errors | keyvalue">
       <ng-container *ngTemplateOutlet="formErrorMsg; context: { key: error.key, value: error.value }"></ng-container>
     </li>
@@ -7,7 +7,13 @@
 
   <ng-container *ngIf="errors">
     <ng-container *ngFor="let error of errors | keyvalue">
-      <li>{{error.value}}</li>
+      <ng-container *ngIf="error.key">
+        <li>{{error.key | titlecase}}: {{error.value}}</li>
+      </ng-container>
+
+      <ng-container *ngIf="!error.key">
+        <li>{{error.value}}</li>
+      </ng-container>
     </ng-container>
   </ng-container>
 

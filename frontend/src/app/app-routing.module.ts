@@ -11,7 +11,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'settings', component: UserSettingsComponent },
-  { path: 'editor', component: EditorComponent },
+  { path: 'editor', children: [
+    { path: '', component: EditorComponent },
+    { path: ':slug', component: EditorComponent }
+    ]
+  },
   { path: '**', redirectTo: ''}
 ];
 
