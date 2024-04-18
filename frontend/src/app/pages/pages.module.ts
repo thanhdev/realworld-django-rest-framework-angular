@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { SharedModule } from "../shared/shared.module";
 import { RouterModule } from "@angular/router";
 import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { EditorComponent } from './editor/editor.component';
 
 
 
@@ -15,7 +16,8 @@ import { UserSettingsComponent } from './user-settings/user-settings.component';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    EditorComponent
   ],
   imports: [
     CommonModule,
