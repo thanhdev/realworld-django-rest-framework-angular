@@ -4,7 +4,7 @@ import {
   ArticleResponse,
   ArticlesResponse,
   CreateArticlePayload,
-  QueryArticlesParams
+  QueryArticlesParams, UpdateArticlePayload
 } from "../../models/api/article.model";
 import {Observable} from "rxjs";
 import { QueryPaginationParams } from "../../models/api/query-pagination.model";
@@ -20,6 +20,18 @@ export class ArticleService {
 
   public createArticle(payload: CreateArticlePayload): Observable<ArticleResponse> {
     return this._requestHelper.post('/articles', payload);
+  }
+
+  public getArticle(slug: string): Observable<ArticleResponse> {
+    return this._requestHelper.get(`/articles/${slug}`);
+  }
+
+  public updateArticle(slug: string, payload: UpdateArticlePayload): Observable<ArticleResponse> {
+    return this._requestHelper.put(`/articles/${slug}`, payload);
+  }
+
+  public deleteArticle(slug: string): Observable<void> {
+    return this._requestHelper.delete(`/articles/${slug}`);
   }
 
   public queryArticles(params: QueryArticlesParams): Observable<ArticlesResponse> {

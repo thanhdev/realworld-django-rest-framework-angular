@@ -19,11 +19,7 @@
 
 <ng-template #articleMeta let-article>
   <div class="article-meta">
-    <a routerLink="/profile/{{article.author.username}}"><img [src]="article.image || DEFAULT_PROFILE_IMAGE" /></a>
-    <div class="info">
-      <a routerLink="/profile/{{article.author.username}}" class="author">{{ article.author.username }}</a>
-      <span class="date">{{ article.updatedAt | date }}</span>
-    </div>
+    <app-article-meta [article]="article"></app-article-meta>
     <button class="btn btn-outline-primary btn-sm pull-xs-right">
       <i class="ion-heart"></i> {{ article.favoritesCount }}
     </button>
