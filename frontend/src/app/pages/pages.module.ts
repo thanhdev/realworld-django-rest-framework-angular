@@ -11,6 +11,7 @@ import { EditorComponent } from './editor/editor.component';
 import { FeedComponent } from './home/feed/feed.component';
 import { ArticleComponent } from './article/article.component';
 import { ArticleMetaComponent } from './article/article-meta/article-meta.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 
@@ -23,7 +24,8 @@ import { ArticleMetaComponent } from './article/article-meta/article-meta.compon
     EditorComponent,
     FeedComponent,
     ArticleComponent,
-    ArticleMetaComponent
+    ArticleMetaComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

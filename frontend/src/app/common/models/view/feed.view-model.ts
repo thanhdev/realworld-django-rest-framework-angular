@@ -6,5 +6,6 @@ export interface FeedMenu {
 
 export enum FeedMenuEnum {
   MINE = 'mine',
-  GLOBAL = 'global'
+  GLOBAL = 'global',
+  FAVORITES = 'favorites'
 }

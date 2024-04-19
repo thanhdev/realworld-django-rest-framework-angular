@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FeedMenuEnum } from "../../../common/models/view/feed.view-model";
 import { ArticleService } from "../../../common/services/api/article.service";
-import { Article, ArticlesResponse } from "../../../common/models/api/article.model";
+import { Article, ArticlesResponse, QueryArticlesParams } from "../../../common/models/api/article.model";
 import { Observable } from "rxjs";
-import { DEFAULT_PROFILE_IMAGE, QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
+import { QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
 
 @Component({
   selector: 'app-feed',
@@ -11,8 +11,8 @@ import { DEFAULT_PROFILE_IMAGE, QUERY_PAGE_SIZE } from "../../../common/constant
   styleUrl: './feed.component.scss'
 })
 export class FeedComponent implements OnChanges {
-  public readonly DEFAULT_PROFILE_IMAGE =  DEFAULT_PROFILE_IMAGE;
   @Input() feedMenuId?: FeedMenuEnum;
+  @Input() queryParams?: Partial<QueryArticlesParams> = {};
 
   public articles: Article[] = [];
   public activePageIndex = 0;
@@ -27,10 +27,13 @@ export class FeedComponent implements OnChanges {
     if (changes['feedMenuId']?.currentValue) {
       this._queryFeed();
     }
+
+    if (changes['queryParams']?.currentValue) {
+      this._queryFeed();
+    }
   }
 
-  private _queryFeed(pageIndex = 0): void {
-    console.log(pageIndex)
+  private _queryFeed(): void {
     this._constructQueryRequest().subscribe((response:ArticlesResponse) => {
       this.articles = response.articles;
       this.totalPages = Math.ceil(response.articlesCount / QUERY_PAGE_SIZE);
@@ -39,6 +42,7 @@ export class FeedComponent implements OnChanges {
 
   private _constructQueryRequest(): Observable<ArticlesResponse> {
     const queryParams = {
+      ...this.queryParams,
       limit: QUERY_PAGE_SIZE,
       offset: this.activePageIndex * QUERY_PAGE_SIZE
     };
@@ -56,6 +60,6 @@ export class FeedComponent implements OnChanges {
     }
 
     this.activePageIndex = pageIndex;
-    this._queryFeed(this.activePageIndex);
+    this._queryFeed();
   }
 }

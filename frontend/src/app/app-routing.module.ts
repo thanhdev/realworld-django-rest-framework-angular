@@ -4,8 +4,11 @@ import { HomeComponent } from "./pages/home/home.component";
 import { LoginComponent } from "./pages/login/login.component";
 import { RegisterComponent } from "./pages/register/register.component";
 import { UserSettingsComponent } from "./pages/user-settings/user-settings.component";
-import {EditorComponent} from "./pages/editor/editor.component";
+import { EditorComponent } from "./pages/editor/editor.component";
 import { ArticleComponent } from "./pages/article/article.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { FeedMenuEnum } from "./common/models/view/feed.view-model";
+import { ProfileRoutingData } from "./common/models/view/profile-routing-data.model";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,11 +21,39 @@ const routes: Routes = [
     ]
   },
   { path: 'article/:slug', component: ArticleComponent },
+  {
+    path: 'profile/:username', children: [
+      {
+        path: '',
+        component: ProfileComponent,
+        data: { feedMenu: FeedMenuEnum.MINE } as ProfileRoutingData
+      },
+      {
+        path: 'favorites',
+        component: ProfileComponent,
+        data: { feedMenu: FeedMenuEnum.FAVORITES } as ProfileRoutingData
+      }
+    ]
+  },
+  {
+    path: 'my-profile',
+    children: [
+      {
+        path: '', component: ProfileComponent,
+        data: { feedMenu: FeedMenuEnum.MINE } as ProfileRoutingData
+      },
+      {
+        path: 'favorites', component: ProfileComponent,
+        data: { feedMenu: FeedMenuEnum.FAVORITES } as ProfileRoutingData
+      }
+    ],
+
+  },
   { path: '**', redirectTo: ''}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {RequestHelperService} from "../utils/request-helper.service";
+import { Injectable } from '@angular/core';
+import { RequestHelperService } from "../utils/request-helper.service";
 import {
   ArticleResponse,
   ArticlesResponse,
   CreateArticlePayload,
-  QueryArticlesParams, UpdateArticlePayload
+  QueryArticlesParams,
+  UpdateArticlePayload
 } from "../../models/api/article.model";
-import {Observable} from "rxjs";
-import { QueryPaginationParams } from "../../models/api/query-pagination.model";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,7 @@ export class ArticleService {
     return this._requestHelper.get('/articles', {params});
   }
 
-  public queryFeedArticles(params: QueryPaginationParams): Observable<ArticlesResponse> {
+  public queryFeedArticles(params: QueryArticlesParams): Observable<ArticlesResponse> {
     return this._requestHelper.get('/articles/feed', {params});
   }
 }
