@@ -31,7 +31,7 @@ jobs:
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
 
-  eslint:
+  angular_tests:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,6 +43,8 @@ jobs:
       run: yarn
     - name: Run ESLint
       run: yarn run eslint . --ext .js,.jsx,.ts,.tsx
+    - name: Run tests
+      run: npm run test
 
   django_tests:
     runs-on: ubuntu-latest
