@@ -14,5 +14,5 @@ export class ArticleMetaComponent {
   @Input() enableUserActions = false;
   @Input() enableAuthorActions = false;
 
-  @Output() onDelete: EventEmitter<void> = new EventEmitter();
+  @Output() deleted: EventEmitter<void> = new EventEmitter();
 }

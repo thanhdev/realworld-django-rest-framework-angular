@@ -110,7 +110,7 @@ export class EditorComponent {
   }
 
   public addTag(): void {
-    let tag = this.mainForm.value.tagInput?.trim();
+    const tag = this.mainForm.value.tagInput?.trim();
     if (!tag || this.mainForm.value.tagList!.includes(tag)) {
       this.mainForm.controls.tagInput.reset();
       return;

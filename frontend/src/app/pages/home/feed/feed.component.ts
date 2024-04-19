@@ -30,6 +30,7 @@ export class FeedComponent implements OnChanges {
   }
 
   private _queryFeed(pageIndex = 0): void {
+    console.log(pageIndex)
     this._constructQueryRequest().subscribe((response:ArticlesResponse) => {
       this.articles = response.articles;
       this.totalPages = Math.ceil(response.articlesCount / QUERY_PAGE_SIZE);

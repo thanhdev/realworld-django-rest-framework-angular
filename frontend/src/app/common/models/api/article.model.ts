@@ -42,5 +42,3 @@ export interface CreateArticlePayload {
 export interface UpdateArticlePayload {
   article: Partial<CreateArticlePayload['article']>
 }
-
-

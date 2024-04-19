@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpHeaders } from "@angular/common/http";
-import { map, Observable } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { AuthenticationService } from "./authentication.service";
 

@@ -78,7 +78,7 @@
 
 <ng-template #articleMeta let-article>
   <div class="article-meta">
-    <app-article-meta [article]="article" [enableUserActions]="!isArticleOwner" [enableAuthorActions]="isArticleOwner" (onDelete)="delete()">
+    <app-article-meta [article]="article" [enableUserActions]="!isArticleOwner" [enableAuthorActions]="isArticleOwner" (deleted)="delete()">
     </app-article-meta>
   </div>
 </ng-template>

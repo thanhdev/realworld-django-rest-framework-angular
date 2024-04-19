@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { RequestHelperService } from "../utils/request-helper.service";
 import { CreateUserPayload, LoginUserPayload, LoginUserResponse, UpdateUserPayload } from "../../models/api/user.model";
 import { Observable } from "rxjs";
-import { ProfileResponse } from "../../models/api/profile.model";
 
 @Injectable({
   providedIn: 'root'
