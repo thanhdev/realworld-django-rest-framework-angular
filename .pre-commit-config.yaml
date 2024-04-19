@@ -1,3 +1,4 @@
+exclude: "backend/static|backend/config"
 default_stages: [commit]
 
 default_language_version:
