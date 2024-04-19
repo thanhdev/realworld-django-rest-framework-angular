@@ -6,6 +6,7 @@ import { UserService } from "../../common/services/api/user.service";
 import { of } from "rxjs";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -25,7 +26,8 @@ describe('RegisterComponent', () => {
       declarations: [RegisterComponent],
       imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterTestingModule
       ],
       providers: [
         {provide: UserService, useValue: spyUserService }
@@ -60,5 +62,5 @@ describe('RegisterComponent', () => {
     component.registerUser();
 
     expect(spyUserService.registerUser).toHaveBeenCalledWith({user: expectedUser});
-  })
+  });
 });

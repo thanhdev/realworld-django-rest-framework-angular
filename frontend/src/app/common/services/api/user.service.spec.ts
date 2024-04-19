@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
 import { RequestHelperService } from "../utils/request-helper.service";
 import { of } from "rxjs";
-import { CreateUserPayload } from "../../models/api/user.model";
+import { CreateUserPayload, LoginUserPayload, UpdateUserPayload } from "../../models/api/user.model";
 
 describe('UserService', () => {
   let service: UserService;
@@ -12,10 +12,14 @@ describe('UserService', () => {
 
   beforeEach(()=> {
     spyRequestHelperService = {
-      post: jasmine.createSpy('post')
+      post: jasmine.createSpy('post'),
+      get: jasmine.createSpy('get'),
+      put: jasmine.createSpy('put')
     }
 
     spyRequestHelperService.post!.and.returnValue(of(null));
+    spyRequestHelperService.get!.and.returnValue(of(null));
+    spyRequestHelperService.put!.and.returnValue(of(null));
   })
 
   beforeEach(() => {
@@ -45,7 +49,7 @@ describe('UserService', () => {
   });
 
   it('should login user', ()=> {
-    const expectedPayload = {
+    const expectedPayload: LoginUserPayload = {
       user: {
         email: 'a@hotmail.com',
         password: 'thisIsPassword'
@@ -54,5 +58,25 @@ describe('UserService', () => {
 
     service.userLogin(expectedPayload);
     expect(spyRequestHelperService.post).toHaveBeenCalledWith('/users/login', expectedPayload);
+  });
+
+  it('should get current user', () => {
+    service.getCurrentUser();
+    expect(spyRequestHelperService.get).toHaveBeenCalledOnceWith('/user');
+  });
+
+  it('should update user', ()=> {
+    const expectedPayload: UpdateUserPayload = {
+      user: {
+        email: 'email@example.com',
+        username: 'hello',
+        image: 'http://localhost/img.png',
+        bio: 'short bio',
+        password: 'thisIsNewPassword'
+      }
+    };
+
+    service.updateUser(expectedPayload);
+    expect(spyRequestHelperService.put).toHaveBeenCalledOnceWith('/user', expectedPayload)
   });
 });

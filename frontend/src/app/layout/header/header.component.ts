@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { User } from "../../common/models/api/user.model";
+import { LoginUserResponse, User } from "../../common/models/api/user.model";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { Observable } from "rxjs";
+import { UserService } from "../../common/services/api/user.service";
+import { DEFAULT_PROFILE_IMAGE } from "../../common/constants/default.constant";
 
 interface MenuItem {
   name: string;
@@ -20,15 +22,17 @@ export class HeaderComponent {
   public currentUser$: Observable<User | null>;
 
   public menuItems: MenuItem[] = [];
-  public defaultProfileImg = 'https://static.productionready.io/images/smiley-cyrus.jpg';
+  public readonly defaultProfileImg = DEFAULT_PROFILE_IMAGE;
 
   constructor(
-    private readonly _authenticationService: AuthenticationService
+    private readonly _authenticationService: AuthenticationService,
+    private readonly _userService: UserService
   ) {
     // Get the current user from authentication service
-    this.currentUser$ = this._authenticationService.currentUser$();
+    this.currentUser$ = this._authenticationService.currentUser$;
 
     this._subscribeToUserChanges();
+    this._loadCurrentUser();
   }
 
   private _subscribeToUserChanges(): void {
@@ -58,5 +62,13 @@ export class HeaderComponent {
     this.menuItems.forEach((item: MenuItem) => {
       item.isActive = item.name === menuItemName;
     });
+  }
+
+  private _loadCurrentUser(): void {
+    if (this._authenticationService.currentUserToken) {
+      this._userService.getCurrentUser().subscribe((response: LoginUserResponse) => {
+        this._authenticationService.login(response.user);
+      });
+    }
   }
 }

@@ -1,0 +1,25 @@
+<a routerLink="/profile/{{article.author.username}}"><img [src]="article.author.image || DEFAULT_PROFILE_IMAGE" /></a>
+<div class="info">
+  <a routerLink="/profile/{{article.author.username}}" class="author">{{ article.author.username }}</a>
+  <span class="date">{{ article.updatedAt | date }}</span>
+</div>
+
+<ng-container *ngIf="enableUserActions">
+  <button class="btn btn-sm btn-outline-secondary">
+    <i class="ion-plus-round"></i>
+    &nbsp; Follow {{ article.author.username}}
+  </button>
+  <button class="btn btn-sm btn-outline-primary">
+    <i class="ion-heart"></i>
+    &nbsp; Favorite Article <span class="counter">({{ article.favoritesCount }})</span>
+  </button>
+</ng-container>
+
+<ng-container *ngIf="enableAuthorActions">
+  <button class="btn btn-sm btn-outline-secondary" routerLink="/editor/{{article.slug}}">
+    <i class="ion-edit"></i> Edit Article
+  </button>
+  <button class="btn btn-sm btn-outline-danger" (click)="deleted.emit()">
+    <i class="ion-trash-a"></i> Delete Article
+  </button>
+</ng-container>

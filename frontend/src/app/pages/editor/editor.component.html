@@ -1,0 +1,49 @@
+<div class="editor-page">
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-10 offset-md-1 col-xs-12">
+        <h1 class="text-xs-center">Article editor</h1>
+
+        <ul *ngIf="displaySuccessMessage && mainForm.pristine" class="success-messages">
+          <li>Published successfully!</li>
+        </ul>
+
+        <app-error-message [errors]="errors"></app-error-message>
+
+        <form [formGroup]="mainForm">
+          <fieldset>
+            <fieldset class="form-group">
+              <input formControlName="title" type="text" class="form-control" placeholder="Article Title" />
+              <app-error-message [form]="mainForm.controls.title"></app-error-message>
+            </fieldset>
+            <fieldset class="form-group">
+              <input formControlName="description" type="text" class="form-control" placeholder="What's this article about?" />
+              <app-error-message [form]="mainForm.controls.description"></app-error-message>
+            </fieldset>
+            <fieldset class="form-group">
+              <textarea
+                formControlName="body"
+                class="form-control"
+                rows="8"
+                placeholder="Write your article (in markdown)"
+              ></textarea>
+              <app-error-message [form]="mainForm.controls.body"></app-error-message>
+            </fieldset>
+            <fieldset class="form-group">
+              <input formControlName="tagInput" (change)="addTag()" type="text" class="form-control" placeholder="Enter tags" />
+              <div class="tag-list">
+                <span *ngFor="let tag of mainForm.value.tagList" class="tag-default tag-pill">
+                  <i class="ion-close-round" (click)="removeTag(tag)"></i>
+                  {{ tag }}
+                </span>
+              </div>
+            </fieldset>
+          </fieldset>
+        </form>
+        <button [disabled]="!mainForm.valid" (click)="submitForm()" class="btn btn-lg pull-xs-right btn-primary">
+          Publish Article
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

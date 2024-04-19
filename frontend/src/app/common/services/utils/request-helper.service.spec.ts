@@ -35,21 +35,21 @@ describe('RequestHelperService', () => {
 
   it('should send get request', ()=> {
     service.get('testUrl');
-    expect(spyHttpClient.get).toHaveBeenCalledOnceWith(apiTestUrl, jasmine.any(Object));
+    expect(spyHttpClient.get).toHaveBeenCalledOnceWith(apiTestUrl, jasmine.objectContaining({headers: jasmine.any(Object)}));
   });
 
   it('should send post request', ()=> {
-service.post('testUrl', {});
-    expect(spyHttpClient.post).toHaveBeenCalledOnceWith(apiTestUrl, {});
+    service.post('testUrl', {});
+    expect(spyHttpClient.post).toHaveBeenCalledOnceWith(apiTestUrl, {}, jasmine.objectContaining({ headers: jasmine.any(Object) }))
   });
 
   it('should send put request', ()=> {
     service.put('testUrl', {});
-    expect(spyHttpClient.put).toHaveBeenCalledOnceWith(apiTestUrl, {});
+    expect(spyHttpClient.put).toHaveBeenCalledOnceWith(apiTestUrl, {}, jasmine.objectContaining({headers: jasmine.any(Object)}));
   });
 
   it('should send delete request', ()=> {
     service.delete('testUrl');
-    expect(spyHttpClient.delete).toHaveBeenCalledOnceWith(apiTestUrl);
+    expect(spyHttpClient.delete).toHaveBeenCalledOnceWith(apiTestUrl , jasmine.objectContaining({headers: jasmine.any(Object)}));
   });
 });

@@ -17,7 +17,7 @@
 
           <fieldset class="form-group">
             <input formControlName="password" class="form-control form-control-lg" type="password" placeholder="Password" />
-            <app-error-message [form]="mainForm.controls.email"></app-error-message>
+            <app-error-message [form]="mainForm.controls.password"></app-error-message>
           </fieldset>
 
           <button [disabled]="!mainForm.valid" (click)="login()"

@@ -41,9 +41,23 @@ class ArticleSerializer(serializers.ModelSerializer):
     @staticmethod
     def validate_tagList(value):
         return [
-            Tag.objects.get_or_create(name=tag, slug=slugify(tag))[0]
-            for tag in value
+            Tag.objects.get_or_create(
+                slug=slugify(tag), defaults={"name": tag}
+            )[0]
+            for tag in value or []
         ]
+
+    def validate(self, attrs):
+        queryset = (
+            Article.objects.exclude(pk=self.instance.pk)
+            if self.instance
+            else Article.objects.all()
+        )
+        if queryset.filter(slug=slugify(attrs["title"])).exists():
+            raise serializers.ValidationError(
+                {"slug": "article with this slug already exists."}
+            )
+        return attrs
 
     def create(self, validated_data):
         validated_data["author"] = self.context["request"].user

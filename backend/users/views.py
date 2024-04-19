@@ -1,5 +1,6 @@
 from rest_framework import viewsets, views
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -48,15 +49,18 @@ class ProfileViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
     object_name = "profile"
     lookup_url_kwarg = "username"
     lookup_field = "username"
-    queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        return super().get_queryset().exclude(pk=self.request.user.pk)
+        queryset = User.objects.all()
+        if self.action == "follow":
+            return queryset.exclude(pk=self.request.user.pk)
+        return queryset
 
     @action(detail=True, methods=["POST", "DELETE"])
     def follow(self, request, username=None):
+        if request.user.is_anonymous:
+            raise PermissionDenied()
         user = self.get_object()
         if request.method == "DELETE":  # Unfollow
             request.user.following.remove(user)

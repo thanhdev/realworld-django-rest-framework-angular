@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --browsers=ChromeHeadless"
+    "test": "ng test --browsers=ChromeHeadless --watch=false"
   },
   "private": true,
   "dependencies": {
@@ -24,9 +24,13 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.4",
+    "@angular-eslint/eslint-plugin": "^17.3.0",
     "@angular/cli": "^17.3.4",
     "@angular/compiler-cli": "^17.3.0",
     "@types/jasmine": "~5.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8.57.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

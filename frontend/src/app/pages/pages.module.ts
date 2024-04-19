@@ -6,6 +6,11 @@ import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { SharedModule } from "../shared/shared.module";
 import { RouterModule } from "@angular/router";
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { EditorComponent } from './editor/editor.component';
+import { FeedComponent } from './home/feed/feed.component';
+import { ArticleComponent } from './article/article.component';
+import { ArticleMetaComponent } from './article/article-meta/article-meta.component';
 
 
 
@@ -13,7 +18,12 @@ import { RouterModule } from "@angular/router";
   declarations: [
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    UserSettingsComponent,
+    EditorComponent,
+    FeedComponent,
+    ArticleComponent,
+    ArticleMetaComponent
   ],
   imports: [
     CommonModule,

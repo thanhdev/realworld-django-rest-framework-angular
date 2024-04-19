@@ -4,6 +4,7 @@ import { RegisterFormViewModel } from "../../common/models/form/authentication-f
 import { UserService } from "../../common/services/api/user.service";
 import { CreateUserPayload } from "../../common/models/api/user.model";
 import { HttpErrorResponse } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,8 @@ export class RegisterComponent {
   public successDisplayed = false;
 
   constructor(
-    private readonly _userService: UserService
+    private readonly _userService: UserService,
+    private readonly _router: Router
   ) {
     this.mainForm = this._constructRegisterForm();
   }
@@ -45,7 +47,11 @@ export class RegisterComponent {
     this._userService.registerUser(payload).subscribe({
       next: () => {
         this.successDisplayed = true;
-        this.mainForm.reset();
+
+        setTimeout(
+          () => {this._router.navigateByUrl('/login');},
+          5000
+        );
       },
       error: (err: HttpErrorResponse) => {
         this.successDisplayed = false;
