@@ -12,7 +12,7 @@ import { FeedComponent } from './home/feed/feed.component';
 import { ArticleComponent } from './article/article.component';
 import { ArticleMetaComponent } from './article/article-meta/article-meta.component';
 import { ProfileComponent } from './profile/profile.component';
-
+import { ArticleCommentsComponent } from './article/article-comment/article-comments.component';
 
 
 @NgModule({
@@ -25,7 +25,8 @@ import { ProfileComponent } from './profile/profile.component';
     FeedComponent,
     ArticleComponent,
     ArticleMetaComponent,
-    ProfileComponent
+    ProfileComponent,
+    ArticleCommentsComponent
   ],
   imports: [
     CommonModule,

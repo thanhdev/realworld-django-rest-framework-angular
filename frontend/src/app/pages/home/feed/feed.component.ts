@@ -62,4 +62,24 @@ export class FeedComponent implements OnChanges {
     this.activePageIndex = pageIndex;
     this._queryFeed();
   }
+
+  public toggleArticleFavorite(article: Article): void {
+    if (!this.articles) return;
+
+    if (article.favorited) {
+      this._articleService.unfavoriteArticle(article.slug).subscribe(response => {
+        this._setSingleArticle(response.article);
+      });
+    } else {
+      this._articleService.favoriteArticle(article.slug).subscribe(response => {
+        this._setSingleArticle(response.article);
+      });
+    }
+  }
+
+  private _setSingleArticle(article: Article): void {
+    const articleIndex = this.articles.findIndex(a => a.slug === article.slug);
+    this.articles[articleIndex] = article;
+    this.articles = [...this.articles]
+  }
 }
