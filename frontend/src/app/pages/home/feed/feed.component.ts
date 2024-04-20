@@ -12,7 +12,7 @@ import { QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
 })
 export class FeedComponent implements OnChanges {
   @Input() feedMenuId?: FeedMenuEnum;
-  @Input() queryParams?: Partial<QueryArticlesParams> = {};
+  @Input() queryParams?: QueryArticlesParams = {};
 
   public articles: Article[] = [];
   public activePageIndex = 0;

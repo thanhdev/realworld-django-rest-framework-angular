@@ -22,7 +22,7 @@ export class ProfileComponent {
   public profileNotFound = false;
   public isLoading = true;
 
-  public feedQueryParams?: Partial<QueryArticlesParams>;
+  public feedQueryParams?: QueryArticlesParams;
 
   private _feedMenuType?: FeedMenuEnum;
 
