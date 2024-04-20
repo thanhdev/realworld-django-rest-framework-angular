@@ -10,8 +10,7 @@
   <div class="container page">
     <div class="row article-content">
       <div class="col-md-12">
-        <!-- TODO: display article content using markdown-->
-        <div>{{article.description}}</div>
+        <markdown [data]="article.body"></markdown>
         <br>
         <ul class="tag-list">
           <li *ngFor="let tag of article.tagList" class="tag-default tag-pill tag-outline">{{ tag }}</li>

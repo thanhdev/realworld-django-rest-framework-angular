@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ErrorMessageComponent } from "./error-message/error-message.component";
 
 
-
 @NgModule({
   declarations: [
     ErrorMessageComponent
