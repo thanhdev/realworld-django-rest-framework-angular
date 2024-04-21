@@ -1,3 +1,6 @@
+git checkout deploy
+git fetch
+git merge --no-edit origin/master
 export DJANGO_SETTINGS_MODULE=config.deploy_settings
 npm --prefix frontend install
 npm --prefix frontend run build
