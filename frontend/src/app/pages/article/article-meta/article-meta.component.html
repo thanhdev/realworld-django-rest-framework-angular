@@ -5,14 +5,33 @@
 </div>
 
 <ng-container *ngIf="enableUserActions">
-  <button class="btn btn-sm btn-outline-secondary">
-    <i class="ion-plus-round"></i>
-    &nbsp; Follow {{ article.author.username}}
-  </button>
-  <button class="btn btn-sm btn-outline-primary">
-    <i class="ion-heart"></i>
-    &nbsp; Favorite Article <span class="counter">({{ article.favoritesCount }})</span>
-  </button>
+  <ng-container *ngIf="article.author.following">
+    <button class="btn btn-sm btn-outline-danger" (click)="followed.emit(false)">
+      <i class="ion-minus-round"></i>
+      Unfollow {{ article.author.username }}
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="!article.author.following">
+    <button class="btn btn-sm btn-outline-secondary" (click)="followed.emit(true)">
+      <i class="ion-plus-round"></i>
+      &nbsp; Follow {{ article.author.username }}
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="article.favorited">
+    <button class="btn btn-sm btn-outline-primary" (click)="favorited.emit(false)">
+      <i class="ion-heart"></i>
+      &nbsp; Unfavorite Article <span class="counter">({{ article.favoritesCount }})</span>
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="!article.favorited">
+    <button class="btn btn-sm btn-outline-primary" (click)="favorited.emit(true)">
+      <i class="ion-heart"></i>
+      &nbsp; Favorite Article <span class="counter">({{ article.favoritesCount }})</span>
+    </button>
+  </ng-container>
 </ng-container>
 
 <ng-container *ngIf="enableAuthorActions">

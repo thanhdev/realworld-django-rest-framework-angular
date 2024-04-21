@@ -14,13 +14,11 @@ export class RequestHelperService {
     private readonly _authService: AuthenticationService
   ) { }
 
-  public get(url: string, params?: any): Observable<any> {
+  public get(url: string, queryOptions: any = {}): Observable<any> {
     const options = {
-      headers: this._constructRequestHeaders(),
-      params
+      ...queryOptions,
+      headers: this._constructRequestHeaders()
     }
-
-    if (!params) delete options.params;
 
     return this._httpClient.get(this._decorateUrl(url), options);
   }

@@ -1,13 +1,19 @@
-import {Injectable} from '@angular/core';
-import {RequestHelperService} from "../utils/request-helper.service";
+import { Injectable } from '@angular/core';
+import { RequestHelperService } from "../utils/request-helper.service";
 import {
   ArticleResponse,
   ArticlesResponse,
   CreateArticlePayload,
-  QueryArticlesParams, UpdateArticlePayload
+  QueryArticlesParams,
+  UpdateArticlePayload
 } from "../../models/api/article.model";
-import {Observable} from "rxjs";
-import { QueryPaginationParams } from "../../models/api/query-pagination.model";
+import { Observable } from "rxjs";
+import {
+  ArticleCommentResponse,
+  ArticleCommentsResponse,
+  CreateArticleCommentPayload
+} from "../../models/api/comment.model";
+import { TagsResponse } from "../../models/api/tag.model";
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +44,31 @@ export class ArticleService {
     return this._requestHelper.get('/articles', {params});
   }
 
-  public queryFeedArticles(params: QueryPaginationParams): Observable<ArticlesResponse> {
+  public queryFeedArticles(params: QueryArticlesParams): Observable<ArticlesResponse> {
     return this._requestHelper.get('/articles/feed', {params});
+  }
+
+  public favoriteArticle(slug: string): Observable<ArticleResponse> {
+    return this._requestHelper.post(`/articles/${ slug }/favorite`, null);
+  }
+
+  public unfavoriteArticle(slug: string): Observable<ArticleResponse> {
+    return this._requestHelper.delete(`/articles/${ slug }/favorite`);
+  }
+
+  public queryArticleComments(articleSlug: string): Observable<ArticleCommentsResponse> {
+    return this._requestHelper.get(`/articles/${ articleSlug }/comments`);
+  }
+
+  public createArticleComment(articleSlug: string, payload: CreateArticleCommentPayload): Observable<ArticleCommentResponse> {
+    return this._requestHelper.post(`/articles/${ articleSlug }/comments`, payload);
+  }
+
+  public deleteArticleComment(articleSlug: string, commentId: number): Observable<void> {
+    return this._requestHelper.delete(`/articles/${ articleSlug }/comments/${ commentId }`);
+  }
+
+  public queryTags(): Observable<TagsResponse> {
+    return this._requestHelper.get('/tags');
   }
 }

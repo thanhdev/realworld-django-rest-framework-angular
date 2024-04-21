@@ -15,4 +15,6 @@ export class ArticleMetaComponent {
   @Input() enableAuthorActions = false;
 
   @Output() deleted: EventEmitter<void> = new EventEmitter();
+  @Output() favorited: EventEmitter<boolean> = new EventEmitter();
+  @Output() followed: EventEmitter<boolean> = new EventEmitter();
 }

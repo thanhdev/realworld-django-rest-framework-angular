@@ -3,6 +3,7 @@ import { Article } from "../../common/models/api/article.model";
 import { ArticleService } from "../../common/services/api/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
+import { ProfileService } from "../../common/services/api/profile.service";
 
 @Component({
   selector: 'app-article',
@@ -19,6 +20,7 @@ export class ArticleComponent {
     private readonly _activatedRoute: ActivatedRoute,
     private readonly _articleService: ArticleService,
     private readonly _authService: AuthenticationService,
+    private readonly _profileService: ProfileService,
     private readonly _router: Router
   ) {
     this._articleSlug = this._activatedRoute.snapshot.params['slug'];
@@ -42,6 +44,34 @@ export class ArticleComponent {
     if (this.article) {
       this._articleService.deleteArticle(this.article.slug).subscribe(() => {
         this._router.navigateByUrl('/');
+      });
+    }
+  }
+
+  public toggleArticleFavorited(favorited: boolean): void {
+    if (!this.article) return;
+
+    if (favorited) {
+      this._articleService.favoriteArticle(this.article.slug).subscribe(response => {
+        this.article = response.article;
+      });
+    } else {
+      this._articleService.unfavoriteArticle(this.article.slug).subscribe(response => {
+        this.article = response.article;
+      });
+    }
+  }
+
+  public toggleAuthorFollowed(followed: boolean): void {
+    if (!this.article) return;
+
+    if (followed) {
+      this._profileService.followUser(this.article.author.username).subscribe(response => {
+        this.article!.author = response?.profile;
+      });
+    } else {
+      this._profileService.unfollowUser(this.article.author.username).subscribe(response => {
+        this.article!.author = response?.profile;
       });
     }
   }
