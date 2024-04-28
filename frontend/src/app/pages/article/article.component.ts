@@ -4,6 +4,7 @@ import { ArticleService } from "../../common/services/api/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { ProfileService } from "../../common/services/api/profile.service";
+import { constructLoginUrlTree } from "../../common/guards/authentication.guard";
 
 @Component({
   selector: 'app-article',
@@ -52,12 +53,22 @@ export class ArticleComponent {
     if (!this.article) return;
 
     if (favorited) {
-      this._articleService.favoriteArticle(this.article.slug).subscribe(response => {
-        this.article = response.article;
+      this._articleService.favoriteArticle(this.article.slug).subscribe({
+        next: response => {
+          this.article = response.article;
+        },
+        error: () => {
+          this._router.navigateByUrl(constructLoginUrlTree(this._router));
+        }
       });
     } else {
-      this._articleService.unfavoriteArticle(this.article.slug).subscribe(response => {
-        this.article = response.article;
+      this._articleService.unfavoriteArticle(this.article.slug).subscribe({
+        next: response => {
+          this.article = response.article;
+        },
+        error: () => {
+          this._router.navigateByUrl(constructLoginUrlTree(this._router));
+        }
       });
     }
   }
@@ -66,12 +77,22 @@ export class ArticleComponent {
     if (!this.article) return;
 
     if (followed) {
-      this._profileService.followUser(this.article.author.username).subscribe(response => {
-        this.article!.author = response?.profile;
+      this._profileService.followUser(this.article.author.username).subscribe({
+        next: response => {
+          this.article!.author = response.profile;
+        },
+        error: () => {
+          this._router.navigateByUrl(constructLoginUrlTree(this._router));
+        }
       });
     } else {
-      this._profileService.unfollowUser(this.article.author.username).subscribe(response => {
-        this.article!.author = response?.profile;
+      this._profileService.unfollowUser(this.article.author.username).subscribe({
+        next: response => {
+          this.article!.author = response.profile;
+        },
+        error: () => {
+          this._router.navigateByUrl(constructLoginUrlTree(this._router));
+        }
       });
     }
   }

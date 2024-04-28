@@ -1,15 +1,24 @@
 <div class="row">
   <div class="col-xs-12 col-md-8 offset-md-2">
-    <form class="card comment-form">
+    <form class="card comment-form" *ngIf="currentUser">
       <div class="card-block">
         <textarea [formControl]="newCommentControl" class="form-control" placeholder="Write a comment..." rows="3">
         </textarea>
       </div>
       <div class="card-footer">
-        <img [src]="currentUser?.image || DEFAULT_PROFILE_IMAGE" class="comment-author-img"/>
+        <img [src]="currentUser.image || DEFAULT_PROFILE_IMAGE" class="comment-author-img"/>
         <button type="button" class="btn btn-sm btn-primary" (click)="addComment()">Post Comment</button>
       </div>
     </form>
+
+    <ng-container *ngIf="!currentUser">
+      <p>
+        <a routerLink="/login" [queryParams]="loginUrlTree.queryParams">Sign in</a>
+        or
+        <a routerLink="/register">sign up</a>
+        to add comments on this article.
+      </p>
+    </ng-container>
 
     <ng-container *ngIf="comments">
       <ng-container *ngFor="let comment of comments" [ngTemplateOutlet]="singleComment"

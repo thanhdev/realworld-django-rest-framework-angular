@@ -50,7 +50,7 @@ export class RegisterComponent {
 
         setTimeout(
           () => {this._router.navigateByUrl('/login');},
-          5000
+          2000
         );
       },
       error: (err: HttpErrorResponse) => {

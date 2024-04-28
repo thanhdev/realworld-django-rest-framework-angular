@@ -4,13 +4,15 @@ import { ArticleService } from "../../../common/services/api/article.service";
 import { Article, ArticlesResponse, QueryArticlesParams } from "../../../common/models/api/article.model";
 import { Observable } from "rxjs";
 import { QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
+import { Router } from "@angular/router";
+import { constructLoginUrlTree } from "../../../common/guards/authentication.guard";
 
 @Component({
   selector: 'app-feed',
-  templateUrl: './feed.component.html',
-  styleUrl: './feed.component.scss'
+  templateUrl: './articles-feed.component.html',
+  styleUrl: './articles-feed.component.scss'
 })
-export class FeedComponent implements OnChanges {
+export class ArticlesFeedComponent implements OnChanges {
   @Input() feedMenuId?: FeedMenuEnum;
   @Input() queryParams?: QueryArticlesParams = {};
 
@@ -19,7 +21,8 @@ export class FeedComponent implements OnChanges {
   public totalPages = 0;
 
   constructor(
-    private readonly _articleService: ArticleService
+    private readonly _articleService: ArticleService,
+    private readonly _router: Router
   ) {
   }
 
@@ -67,12 +70,22 @@ export class FeedComponent implements OnChanges {
     if (!this.articles) return;
 
     if (article.favorited) {
-      this._articleService.unfavoriteArticle(article.slug).subscribe(response => {
-        this._setSingleArticle(response.article);
+      this._articleService.unfavoriteArticle(article.slug).subscribe({
+        next: (response) => {
+          this._setSingleArticle(response.article);
+        },
+        error: () => {
+          this._router.navigateByUrl(constructLoginUrlTree(this._router));
+        }
       });
     } else {
-      this._articleService.favoriteArticle(article.slug).subscribe(response => {
-        this._setSingleArticle(response.article);
+      this._articleService.favoriteArticle(article.slug).subscribe({
+        next: (response) => {
+          this._setSingleArticle(response.article);
+        },
+        error: () => {
+          this._router.navigateByUrl(constructLoginUrlTree(this._router));
+        }
       });
     }
   }

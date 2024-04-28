@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { ProfileService } from "../../common/services/api/profile.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router, UrlTree } from "@angular/router";
 import { ProfileResponse, UserProfile } from "../../common/models/api/profile.model";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { finalize, Observable, switchMap } from "rxjs";
 import { DEFAULT_PROFILE_IMAGE } from "../../common/constants/default.constant";
 import { QueryArticlesParams } from "../../common/models/api/article.model";
 import { FeedMenuEnum } from "../../common/models/view/feed.view-model";
+import { constructLoginUrlTree } from "../../common/guards/authentication.guard";
 
 @Component({
   selector: 'app-profile',
@@ -23,16 +24,19 @@ export class ProfileComponent {
   public isLoading = true;
 
   public feedQueryParams?: QueryArticlesParams;
+  public loginUrlTree: UrlTree;
 
   private _feedMenuType?: FeedMenuEnum;
 
   constructor(
     private readonly _activatedRoute: ActivatedRoute,
     private readonly _profileService: ProfileService,
-    private readonly _authService: AuthenticationService
+    private readonly _authService: AuthenticationService,
+    private readonly _router: Router
   ) {
     this._profileUsername = this._activatedRoute.snapshot.params['username'];
     this._feedMenuType = this._activatedRoute.snapshot.data['feedMenu'] || FeedMenuEnum.MINE;
+    this.loginUrlTree = constructLoginUrlTree(_router);
 
     this._loadProfile();
   }
@@ -57,15 +61,15 @@ export class ProfileComponent {
 
     return this._authService.currentUser$.pipe(
       switchMap((user) => {
-          if (!this._profileUsername || user?.username === this._profileUsername) {
-            this.isMyProfile = true;
-            return this._profileService.getProfile(user!.username).pipe(finalize(() => this.isLoading = false));
-          }
-
-          this.isMyProfile = false;
-          return this._profileService.getProfile(this._profileUsername).pipe(finalize(() => this.isLoading = false));
+        if (!this._profileUsername || user?.username === this._profileUsername) {
+          this.isMyProfile = true;
+          return this._profileService.getProfile(user!.username).pipe(finalize(() => this.isLoading = false));
         }
-      ));
+
+        this.isMyProfile = false;
+        return this._profileService.getProfile(this._profileUsername).pipe(finalize(() => this.isLoading = false));
+      })
+    );
   }
 
   private _setupFeedQueryParams(): void {
@@ -83,6 +87,9 @@ export class ProfileComponent {
       .subscribe({
         next: (profile: ProfileResponse) => {
           this.profile = profile.profile;
+        },
+        error: () => {
+          this._router.navigateByUrl(this.loginUrlTree);
         }
       });
   }
@@ -92,6 +99,9 @@ export class ProfileComponent {
       .subscribe({
         next: (profile: ProfileResponse) => {
           this.profile = profile.profile;
+        },
+        error: () => {
+          this._router.navigateByUrl(this.loginUrlTree);
         }
       });
   }
