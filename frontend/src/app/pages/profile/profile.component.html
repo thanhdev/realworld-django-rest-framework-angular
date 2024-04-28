@@ -43,11 +43,11 @@
             <ul class="nav nav-pills outline-active">
               <li class="nav-item">
                 <a class="nav-link" [ngClass]="{'active': feedQueryParams?.author}"
-                   routerLink="/profile/{{profile.username}}">My Articles</a>
+                   routerLink="/profile/{{profile.username}}"> {{ profile.username }}'s Articles</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" [ngClass]="{'active': feedQueryParams?.favorited}"
-                   routerLink="/profile/{{profile.username}}/favorites">Favorited Articles</a>
+                   routerLink="/profile/{{profile.username}}/favorites">{{ profile.username }}'s Favorited Articles</a>
               </li>
             </ul>
           </div>

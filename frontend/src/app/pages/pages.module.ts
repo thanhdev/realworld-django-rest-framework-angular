@@ -8,7 +8,7 @@ import { SharedModule } from "../shared/shared.module";
 import { RouterModule } from "@angular/router";
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { EditorComponent } from './editor/editor.component';
-import { FeedComponent } from './home/feed/feed.component';
+import { ArticlesFeedComponent } from './article/feed/articles-feed.component';
 import { ArticleComponent } from './article/article.component';
 import { ArticleMetaComponent } from './article/article-meta/article-meta.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -24,7 +24,7 @@ import { MarkdownModule } from "ngx-markdown";
     HomeComponent,
     UserSettingsComponent,
     EditorComponent,
-    FeedComponent,
+    ArticlesFeedComponent,
     ArticleComponent,
     ArticleMetaComponent,
     ProfileComponent,

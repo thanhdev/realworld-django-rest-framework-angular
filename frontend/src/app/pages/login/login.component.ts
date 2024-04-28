@@ -5,7 +5,7 @@ import { UserService } from "../../common/services/api/user.service";
 import { LoginUserPayload, LoginUserResponse } from "../../common/models/api/user.model";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,8 @@ export class LoginComponent {
   constructor(
     private readonly _userService: UserService,
     private readonly _authenticationService: AuthenticationService,
-    private readonly _router: Router
+    private readonly _router: Router,
+    private readonly _activatedRoute: ActivatedRoute
   ) {
     this.mainForm = this._constructMainForm();
   }
@@ -42,9 +43,9 @@ export class LoginComponent {
 
     this._userService.userLogin(payload).subscribe({
       next: (response: LoginUserResponse) => {
-        // If successful, store the user and redirect to the home page
+        // If successful, store the user and redirect to the previous page
         this._authenticationService.login(response.user);
-        this._router.navigateByUrl('/');
+        this._router.navigateByUrl(this._activatedRoute.snapshot.queryParams['returnUrl'] || '/');
       },
       error: (err: HttpErrorResponse) => {
         this.errors = err.error.errors;

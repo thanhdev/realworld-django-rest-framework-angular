@@ -5,7 +5,7 @@ import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { UserService } from "../../common/services/api/user.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LoginUserPayload, User } from "../../common/models/api/user.model";
 import { of } from "rxjs";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -17,6 +17,7 @@ describe('LoginComponent', () => {
   let mockUser: User;
   let spyUserService: Partial<jasmine.SpyObj<UserService>>;
   let spyRouter: Partial<jasmine.SpyObj<Router>>;
+  let mockActivatedRoute: Partial<ActivatedRoute>;
 
   beforeEach(()=> {
     mockUser = {
@@ -33,6 +34,14 @@ describe('LoginComponent', () => {
     spyRouter = {
       navigateByUrl: jasmine.createSpy('navigateByUrl')
     }
+
+    mockActivatedRoute = {
+      snapshot: {
+        queryParams: {
+          returnUrl: '/'
+        }
+      } as any
+    }
   })
 
   beforeEach(async () => {
@@ -44,8 +53,9 @@ describe('LoginComponent', () => {
       ],
       providers: [
         AuthenticationService,
-        {provide: UserService, useValue: spyUserService },
-        {provide: Router, useValue: spyRouter}
+        { provide: UserService, useValue: spyUserService },
+        { provide: Router, useValue: spyRouter },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ],
       schemas:[
         CUSTOM_ELEMENTS_SCHEMA

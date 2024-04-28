@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { ArticleService } from "../../../common/services/api/article.service";
 import { ArticleComment } from "../../../common/models/api/comment.model";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router, UrlTree } from "@angular/router";
 import { AuthenticationService } from "../../../common/services/utils/authentication.service";
 import { FormControl } from "@angular/forms";
 import { DEFAULT_PROFILE_IMAGE } from "../../../common/constants/default.constant";
 import { User } from "../../../common/models/api/user.model";
+import { constructLoginUrlTree } from "../../../common/guards/authentication.guard";
 
 @Component({
   selector: 'app-article-comments',
@@ -17,15 +18,17 @@ export class ArticleCommentsComponent {
   public currentUser?: User;
   public comments: ArticleComment[] = [];
   public newCommentControl = new FormControl('');
-
   private _articleSlug: string;
+  public loginUrlTree: UrlTree;
 
   constructor(
     private readonly _activatedRoute: ActivatedRoute,
     private readonly _articleService: ArticleService,
-    private readonly _authService: AuthenticationService
+    private readonly _authService: AuthenticationService,
+    private readonly _router: Router
   ) {
     this._articleSlug = this._activatedRoute.snapshot.params['slug'];
+    this.loginUrlTree = constructLoginUrlTree(_router);
     this._loadComments();
     this._getCurrentUser();
   }

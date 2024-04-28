@@ -9,13 +9,17 @@ import { ArticleComponent } from "./pages/article/article.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { FeedMenuEnum } from "./common/models/view/feed.view-model";
 import { ProfileRoutingData } from "./common/models/view/profile-routing-data.model";
+import { authenticationGuard } from "./common/guards/authentication.guard";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'settings', component: UserSettingsComponent },
-  { path: 'editor', children: [
+  { path: 'settings', component: UserSettingsComponent, canActivate: [authenticationGuard] },
+  {
+    path: 'editor',
+    canActivateChild: [authenticationGuard],
+    children: [
     { path: '', component: EditorComponent },
     { path: ':slug', component: EditorComponent }
     ]
@@ -37,6 +41,7 @@ const routes: Routes = [
   },
   {
     path: 'my-profile',
+    canActivate: [authenticationGuard],
     children: [
       {
         path: '', component: ProfileComponent,
@@ -49,7 +54,7 @@ const routes: Routes = [
     ],
 
   },
-  { path: '**', redirectTo: ''}
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({
