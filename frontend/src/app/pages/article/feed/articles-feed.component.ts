@@ -2,13 +2,13 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FeedMenuEnum } from "../../../common/models/view/feed.view-model";
 import { ArticleService } from "../../../common/services/api/article.service";
 import { Article, ArticlesResponse, QueryArticlesParams } from "../../../common/models/api/article.model";
-import { Observable } from "rxjs";
+import { finalize, Observable } from "rxjs";
 import { QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
 import { Router } from "@angular/router";
 import { constructLoginUrlTree } from "../../../common/guards/authentication.guard";
 
 @Component({
-  selector: 'app-feed',
+  selector: 'app-articles-feed',
   templateUrl: './articles-feed.component.html',
   styleUrl: './articles-feed.component.scss'
 })
@@ -19,6 +19,7 @@ export class ArticlesFeedComponent implements OnChanges {
   public articles: Article[] = [];
   public activePageIndex = 0;
   public totalPages = 0;
+  public isLoading = true;
 
   constructor(
     private readonly _articleService: ArticleService,
@@ -37,9 +38,13 @@ export class ArticlesFeedComponent implements OnChanges {
   }
 
   private _queryFeed(): void {
-    this._constructQueryRequest().subscribe((response:ArticlesResponse) => {
+    this.isLoading = true;
+    this._constructQueryRequest()
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe((response:ArticlesResponse) => {
       this.articles = response.articles;
       this.totalPages = Math.ceil(response.articlesCount / QUERY_PAGE_SIZE);
+      this.activePageIndex = 0;
     })
   }
 

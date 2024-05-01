@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
-import { RouterTestingModule } from "@angular/router/testing";
 import { UserService } from "../../common/services/api/user.service";
 import { of } from "rxjs";
 import { User } from "../../common/models/api/user.model";
+import { RouterModule } from "@angular/router";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -37,7 +37,7 @@ describe('HeaderComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       imports: [
-        RouterTestingModule
+        RouterModule.forRoot([])
       ],
       providers: [
         {provide: AuthenticationService, useValue: spyAuthenticationService},
@@ -57,5 +57,13 @@ describe('HeaderComponent', () => {
 
   it('should load current user', () => {
     expect(spyUserService.getCurrentUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('should display menu items for logged in user', () => {
+    expect(component.menuItems.length).toBe(4);
+    expect(component.menuItems[0].name).toBe('Home');
+    expect(component.menuItems[1].name).toBe('New Article');
+    expect(component.menuItems[2].name).toBe('Settings');
+    expect(component.menuItems[3].name).toBe('Profile');
   });
 });
