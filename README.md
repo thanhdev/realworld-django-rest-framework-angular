@@ -25,12 +25,11 @@ Ensure you have Python 3 and Node.js installed on your system. The current proje
 - Node.js 18.5.0
 
 ## Installation
-1. Frontend: Choose 1 of 2 ways below:
+### 1. Frontend: Choose 1 of 2 ways below:
 - Install frontend dependencies and start frontend locally:
 ```shell
-cd frontend
-npm install
-npm start
+npm --prefix=frontend install
+npm --prefix=frontend start
 ```
 This command will install and start the Angular development server. You can access the Angular application through your web browser at `http://localhost:4200`.
 
@@ -40,13 +39,15 @@ npm --prefix=frontend install
 npm --prefix=frontend run build
 ```
 
-2. Backend:
+### 2. Backend:
 - Set up a virtual environment
 ```shell
 # Install environment and dependencies
 python3 -m venv .venv
 source .venv/bin/activate 
+
 # or use this command on Windows
+python3 -m venv .venv
 .venv/Scripts/activate
 ```
 
