@@ -44,7 +44,7 @@ npm --prefix=frontend run build
 ```shell
 # Install environment and dependencies
 python3 -m venv .venv
-source .venv/bin/activate 
+source .venv/bin/activate
 
 # or use this command on Windows
 python3 -m venv .venv
@@ -68,4 +68,4 @@ python backend/manage.py migrate
 python backend/manage.py runserver
 ```
 
-Now, your local server should be running, and you can access this Django/Angular application through your web browser.
+Now, your local server should be running, and you can access this Django/Angular application through your web browser at http://localhost:8000.
