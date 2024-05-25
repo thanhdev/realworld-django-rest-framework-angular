@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ArticleFormViewModel} from "../../common/models/form/article-form.view-model";
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ArticleFormViewModel } from "../../common/models/form/article-form.view-model";
 import { Article, CreateArticlePayload, UpdateArticlePayload } from "../../common/models/api/article.model";
-import {ArticleService} from "../../common/services/api/article.service";
+import { ArticleService } from "../../common/services/api/article.service";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -57,8 +57,9 @@ export class EditorComponent {
       title: this._article.title,
       description: this._article.description,
       body: this._article.body,
-      tagList: this._article.tagList
-    })
+      tagList: this._article.tagList,
+      tagInput: ''
+    });
   }
 
   public submitForm(): void {
@@ -116,7 +117,7 @@ export class EditorComponent {
       return;
     }
     this.mainForm.controls.tagList.setValue([...this.mainForm.value.tagList!, tag]);
-    this.mainForm.controls.tagInput.reset();
+    this.mainForm.controls.tagInput.reset('');
   }
 
   public removeTag(tag: string) {

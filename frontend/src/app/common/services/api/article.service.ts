@@ -13,7 +13,6 @@ import {
   ArticleCommentsResponse,
   CreateArticleCommentPayload
 } from "../../models/api/comment.model";
-import { TagsResponse } from "../../models/api/tag.model";
 
 @Injectable({
   providedIn: 'root'
@@ -66,9 +65,5 @@ export class ArticleService {
 
   public deleteArticleComment(articleSlug: string, commentId: number): Observable<void> {
     return this._requestHelper.delete(`/articles/${ articleSlug }/comments/${ commentId }`);
-  }
-
-  public queryTags(): Observable<TagsResponse> {
-    return this._requestHelper.get('/tags');
   }
 }

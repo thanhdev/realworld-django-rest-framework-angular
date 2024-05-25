@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -6,10 +7,12 @@ from django.utils.text import slugify
 
 class TagManager(models.Manager):
     def popular_tags(self):
-        return (
+        return list(
             self.get_queryset()
-            .annotate(count=models.Count("articles"))
+            .values("name")
+            .annotate(count=Count("articles"))
             .order_by("-count")[:10]
+            .values_list("name", flat=True)
         )
 
 

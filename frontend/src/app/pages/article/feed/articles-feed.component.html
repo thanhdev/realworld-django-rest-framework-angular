@@ -1,16 +1,25 @@
-<ng-container *ngIf="articles.length; else noArticle">
-  <div class="article-preview" *ngFor="let article of articles">
-    <ng-container *ngTemplateOutlet="articleMeta; context: { $implicit: article }"></ng-container>
-    <ng-container *ngTemplateOutlet="articlePreview; context: { $implicit: article }"></ng-container>
+<ng-container *ngIf="isLoading">
+  <div class="article-preview">
+    Loading articles...
   </div>
-
-  <ul class="pagination">
-    <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [ngClass]="{'active': i == activePageIndex}">
-      <a class="page-link" (click)="loadPagingData(i)">{{ i + 1 }}</a>
-    </li>
-  </ul>
 </ng-container>
 
+<ng-container *ngIf="!isLoading">
+  <ng-container *ngIf="articles.length; else noArticle">
+    <div class="article-preview" *ngFor="let article of articles">
+      <ng-container *ngTemplateOutlet="articleMeta; context: { $implicit: article }"></ng-container>
+      <ng-container *ngTemplateOutlet="articlePreview; context: { $implicit: article }"></ng-container>
+    </div>
+
+    <ul class="pagination">
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [ngClass]="{'active': i == activePageIndex}">
+        <a class="page-link" (click)="loadPagingData(i)">{{ i + 1 }}</a>
+      </li>
+    </ul>
+  </ng-container>
+</ng-container>
+
+<!--Templates-->
 <ng-template #noArticle>
   <div class="article-preview">
     No articles are here... yet.
@@ -37,3 +46,4 @@
     </ul>
   </a>
 </ng-template>
+<!--End templates-->

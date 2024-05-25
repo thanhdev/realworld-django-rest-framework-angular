@@ -38,7 +38,7 @@ export class HomeComponent {
     this.activeFeed = activeFeed;
 
     if (activeFeed.id === FeedMenuEnum.TAGS) {
-      this.setTagsFeed(activeFeed.name.slice(1));
+      this.feedQueryParams = { tag: activeFeed.name.slice(1) };
       return;
     }
 
@@ -54,12 +54,10 @@ export class HomeComponent {
       feed.isActive = false;
       return feed;
     });
-
     const tagFeed: FeedMenu = { id: FeedMenuEnum.TAGS, name: `#${ tag }`, isActive: true };
     feedList.push(tagFeed);
 
-    this.activeFeed = tagFeed;
-    this.feedQueryParams = { tag };
+    this.setActiveFeed(tagFeed);
 
     this.feedList = feedList;
   }

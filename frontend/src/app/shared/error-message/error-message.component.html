@@ -7,13 +7,12 @@
 
   <ng-container *ngIf="errors">
     <ng-container *ngFor="let error of errors | keyvalue">
-      <ng-container *ngIf="error.key">
+      <ng-container *ngIf="error.key && error.key != 'non_field_errors'; else noKeyError">
         <li>{{error.key | titlecase}}: {{error.value}}</li>
       </ng-container>
-
-      <ng-container *ngIf="!error.key">
+      <ng-template #noKeyError>
         <li>{{error.value}}</li>
-      </ng-container>
+      </ng-template>
     </ng-container>
   </ng-container>
 

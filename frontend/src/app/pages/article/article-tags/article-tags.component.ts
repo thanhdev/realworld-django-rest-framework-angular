@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ArticleService } from "../../../common/services/api/article.service";
+import { TagService } from "../../../common/services/api/tag.service";
 
 @Component({
   selector: 'app-article-tags',
@@ -12,13 +12,13 @@ export class ArticleTagsComponent {
   public tags: string[] = [];
 
   constructor(
-    private readonly _articleService: ArticleService
+    private readonly _tagService: TagService
   ) {
     this._loadTags();
   }
 
   private _loadTags(): void {
-    this._articleService.queryTags().subscribe(response => {
+    this._tagService.query().subscribe(response => {
       this.tags = response.tags;
     });
   }

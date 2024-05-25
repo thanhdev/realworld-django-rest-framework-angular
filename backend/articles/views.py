@@ -66,10 +66,7 @@ class ArticleViewSet(
 class TagListView(APIView):
     @staticmethod
     def get(request):
-        popular_tags = Tag.objects.popular_tags()
-        return Response(
-            {"tags": list(popular_tags.values_list("name", flat=True))}
-        )
+        return Response({"tags": Tag.objects.popular_tags()})
 
 
 class CommentViewSet(
