@@ -1,41 +1,39 @@
 <ul class="error-messages">
-  <ng-container *ngIf="form?.errors && form?.touched">
-    <li *ngFor="let error of form?.errors | keyvalue">
+  @if (form()?.errors && form()?.touched) {
+    @for (error of form()!.errors | keyvalue; track error.key) {
       <ng-container *ngTemplateOutlet="formErrorMsg; context: { key: error.key, value: error.value }"></ng-container>
-    </li>
-  </ng-container>
+    }
+  }
 
-  <ng-container *ngIf="errors">
-    <ng-container *ngFor="let error of errors | keyvalue">
-      <ng-container *ngIf="error.key && error.key != 'non_field_errors'; else noKeyError">
+  @if (errors()) {
+    @for (error of errors() | keyvalue; track error.key) {
+      @if (error.key && error.key != 'non_field_errors') {
         <li>{{error.key | titlecase}}: {{error.value}}</li>
-      </ng-container>
-      <ng-template #noKeyError>
+      } @else {
         <li>{{error.value}}</li>
-      </ng-template>
-    </ng-container>
-  </ng-container>
-
+      }
+    }
+  }
 </ul>
 
 <ng-template #formErrorMsg let-key="key" let-value="value">
-  <ng-container *ngIf="value">
-    <ng-container [ngSwitch]="key">
-      <ng-container *ngSwitchCase="'required'">
+  @if (value) {
+    @switch(key) {
+      @case ('required') {
         Field is required
-      </ng-container>
-      <ng-container *ngSwitchCase="'minlength'">
+      }
+      @case ('minlength') {
         Field is too short
-      </ng-container>
-      <ng-container *ngSwitchCase="'maxlength'">
+      }
+      @case ('maxlength') {
         Field is too long
-      </ng-container>
-      <ng-container *ngSwitchCase="'email'">
+      }
+      @case ('email') {
         Invalid email
-      </ng-container>
-      <ng-container *ngSwitchDefault>
+      }
+      @default {
         Field is invalid
-      </ng-container>
-    </ng-container>
-  </ng-container>
+      }
+    }
+  }
 </ng-template>

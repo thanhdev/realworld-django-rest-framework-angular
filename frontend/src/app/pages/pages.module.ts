@@ -4,7 +4,6 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from "@angular/forms";
-import { SharedModule } from "../shared/shared.module";
 import { RouterModule } from "@angular/router";
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { EditorComponent } from './editor/editor.component';
@@ -15,6 +14,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ArticleCommentsComponent } from './article/article-comment/article-comments.component';
 import { ArticleTagsComponent } from './article/article-tags/article-tags.component';
 import { MarkdownModule } from "ngx-markdown";
+import { ErrorMessageComponent } from '../shared/error-message/error-message.component';
 
 
 @NgModule({
@@ -35,8 +35,8 @@ import { MarkdownModule } from "ngx-markdown";
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    SharedModule,
-    MarkdownModule.forChild()
+    MarkdownModule.forChild(),
+    ErrorMessageComponent
   ],
   exports: [
     LoginComponent,
