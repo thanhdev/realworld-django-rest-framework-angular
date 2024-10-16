@@ -4,6 +4,8 @@ import { AuthenticationService } from "../../common/services/utils/authenticatio
 import { Observable } from "rxjs";
 import { UserService } from "../../common/services/api/user.service";
 import { DEFAULT_PROFILE_IMAGE } from "../../common/constants/default.constant";
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 interface MenuItem {
   name: string;
@@ -16,7 +18,9 @@ interface MenuItem {
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
+  standalone: true,
+  imports: [CommonModule, RouterModule]
 })
 export class HeaderComponent {
   public currentUser$: Observable<User | null>;
