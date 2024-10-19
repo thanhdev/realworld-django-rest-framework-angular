@@ -111,7 +111,7 @@ export class ArticlesFeedComponent implements OnChanges {
         articles[articleIndex] = article;
       }
 
-      return articles;
+      return [...articles];
     });
   }
 }

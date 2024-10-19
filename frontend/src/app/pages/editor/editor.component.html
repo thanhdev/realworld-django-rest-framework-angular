@@ -33,14 +33,16 @@
             </fieldset>
             <fieldset class="form-group">
               <input formControlName="tagInput" (change)="addTag()" type="text" class="form-control" placeholder="Enter tags" />
-              <div class="tag-list">
-                @for (tag of mainForm.value.tagList; track tag) {
-                  <span class="tag-default tag-pill">
-                    <i class="ion-close-round" (click)="removeTag(tag)"></i>
-                    {{ tag }}
-                  </span>
-                }
-              </div>
+              @if (tagsUpdated()) {
+                <div class="tag-list">
+                  @for (tag of mainForm.value.tagList; track tag) {
+                    <span class="tag-default tag-pill">
+                      <i class="ion-close-round" (click)="removeTag(tag)"></i>
+                      {{ tag }}
+                    </span>
+                  }
+                </div>
+              }
             </fieldset>
           </fieldset>
         </form>

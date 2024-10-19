@@ -8,24 +8,24 @@
   @if (article.author.following) {
     <button class="btn btn-sm btn-outline-danger" (click)="followed.emit(false)">
       <i class="ion-minus-round"></i>
-      &nbsp; Unfollow {{ article.author.username }}
+      Unfollow {{ article.author.username }}
     </button>
   } @else {
     <button class="btn btn-sm btn-outline-secondary" (click)="followed.emit(true)">
       <i class="ion-plus-round"></i>
-      &nbsp; Follow {{ article.author.username }}
+      Follow {{ article.author.username }}
     </button>
   }
 
   @if (article.favorited) {
     <button class="btn btn-sm btn-outline-primary" (click)="favorited.emit(false)">
       <i class="ion-heart"></i>
-      &nbsp; Unfavorite Article <span class="counter">({{ article.favoritesCount }})</span>
+      Unfavorite Article <span class="counter">({{ article.favoritesCount }})</span>
     </button>
   } @else {
     <button class="btn btn-sm btn-outline-primary" (click)="favorited.emit(true)">
       <i class="ion-heart"></i>
-      &nbsp; Favorite Article <span class="counter">({{ article.favoritesCount }})</span>
+      Favorite Article <span class="counter">({{ article.favoritesCount }})</span>
     </button>
   }
 }

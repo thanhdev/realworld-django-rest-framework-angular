@@ -5,7 +5,7 @@
 } @else {
 
   @if (articles().length) {
-    @for (article of articles(); track article.slug) {
+    @for (article of articles(); track article) {
       <div class="article-preview">
         <ng-container *ngTemplateOutlet="articleMeta; context: { $implicit: article }"></ng-container>
         <ng-container *ngTemplateOutlet="articlePreview; context: { $implicit: article }"></ng-container>

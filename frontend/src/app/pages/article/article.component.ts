@@ -92,8 +92,11 @@ export class ArticleComponent {
     if (!this.article()) return;
 
     this._constructToggleAuthorFollowRequest(followed).subscribe({
-      next: response => {
-        this.article()!.author = response.profile;
+      next: (response) => {
+        this.article.update(article => {
+          article!.author = response.profile;
+          return {...article!}
+        });
       },
       error: () => {
         this._router.navigateByUrl(constructLoginUrlTree(this._router));

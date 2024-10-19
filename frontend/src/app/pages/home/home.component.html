@@ -11,7 +11,7 @@
       <div class="col-md-9">
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">
-            @for (feed of feedList(); track feed.id) {
+            @for (feed of feedList(); track feed.name) {
               <li class="nav-item">
                 <a class="nav-link" [ngClass]="{'active': feed.isActive}" (click)="setActiveFeed(feed)">{{feed.name}}</a>
               </li>

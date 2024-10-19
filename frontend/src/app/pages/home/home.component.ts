@@ -47,10 +47,10 @@ export class HomeComponent {
   public setActiveFeed(activeFeed: FeedMenu): void {
     if (activeFeed.id === FeedMenuEnum.TAGS) {
       this.feedQueryParams.set({ tag: activeFeed.name.slice(1) });
-      return;
+    } else {
+      this.feedQueryParams.set({});
     }
 
-    this.feedQueryParams.set({});
     this.feedList.update(feedList => {
       return feedList.map(feed => {
         feed.isActive = feed.id === activeFeed.id;

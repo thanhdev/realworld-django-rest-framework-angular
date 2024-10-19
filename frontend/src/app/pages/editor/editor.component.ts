@@ -20,9 +20,10 @@ import { ErrorMessageComponent } from '../../shared/error-message/error-message.
 export class EditorComponent {
   public errors = signal({});
   public displaySuccessMessage = signal(false);
+  public tagsUpdated = signal(false);
   public mainForm: FormGroup<ArticleFormViewModel>;
 
-  private readonly _articleSlug?: string;
+  private _articleSlug?: string;
   private _article?: Article;
 
   constructor(
@@ -67,6 +68,8 @@ export class EditorComponent {
       tagList: this._article.tagList,
       tagInput: ''
     });
+
+    this.tagsUpdated.set(true);
   }
 
   public submitForm(): void {
@@ -96,11 +99,14 @@ export class EditorComponent {
 
   private _updateArticle(payload: UpdateArticlePayload): void {
     this._articleService.updateArticle(this._articleSlug!, payload).subscribe({
-      next: () => {
+      next: (res) => {
         this.displaySuccessMessage.set(true);
+        this._article = res.article;
+        this._articleSlug = res.article.slug;
+        this._bindFormData();
       },
       error: (err) => {
-        this.errors = err.error.errors;
+        this.errors.set(err.error.errors);
       }
     });
   }
@@ -125,6 +131,7 @@ export class EditorComponent {
     }
     this.mainForm.controls.tagList.setValue([...this.mainForm.value.tagList!, tag]);
     this.mainForm.controls.tagInput.reset('');
+    this.tagsUpdated.set(true);
   }
 
   public removeTag(tag: string) {
