@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { ArticlesFeedComponent } from './article/feed/articles-feed.component';
 import { ArticleComponent } from './article/article.component';
 import { ArticleMetaComponent } from './article/article-meta/article-meta.component';
@@ -18,7 +17,6 @@ import { EditorComponent } from './editor/editor.component';
 @NgModule({
   declarations: [
     HomeComponent,
-    UserSettingsComponent,
     ArticlesFeedComponent,
     ArticleComponent,
     ArticleMetaComponent,

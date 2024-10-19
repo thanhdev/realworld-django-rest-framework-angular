@@ -3,12 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserSettingsComponent } from './user-settings.component';
 import { CommonModule } from "@angular/common";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { RouterTestingModule } from "@angular/router/testing";
 import { UserService } from "../../common/services/api/user.service";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { User } from "../../common/models/api/user.model";
 import { of } from "rxjs";
 import { ReactiveFormsModule } from "@angular/forms";
+import { Router, RouterModule } from '@angular/router';
 
 describe('UserSettingsComponent', () => {
   let component: UserSettingsComponent;
@@ -17,6 +17,7 @@ describe('UserSettingsComponent', () => {
   let currentUser: User;
   let spyUserService: Partial<jasmine.SpyObj<UserService>>;
   let spyAuthenticationService: Partial<jasmine.SpyObj<AuthenticationService>>;
+  let spyRouter: Partial<jasmine.SpyObj<Router>>;
 
   beforeEach(()=> {
     currentUser = {
@@ -35,24 +36,33 @@ describe('UserSettingsComponent', () => {
       currentUser$: of(currentUser),
       login: jasmine.createSpy('login')
     };
+
+    spyRouter = {
+      navigateByUrl: jasmine.createSpy('navigateByUrl')
+    };
   })
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UserSettingsComponent],
       imports: [
         CommonModule,
-        RouterTestingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        UserSettingsComponent
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
       ],
       providers: [
         {provide: UserService, useValue: spyUserService},
-        {provide: AuthenticationService, useValue: spyAuthenticationService}
+        {provide: AuthenticationService, useValue: spyAuthenticationService},
+        {provide: Router, useValue: spyRouter}
       ]
     })
+      .overrideComponent(UserSettingsComponent, {
+        remove: {
+          imports: [RouterModule]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(UserSettingsComponent);
