@@ -44,11 +44,11 @@ describe('EditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditorComponent],
       imports: [
         ErrorMessageComponent,
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        EditorComponent
       ],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -97,7 +97,7 @@ describe('EditorComponent', () => {
   it('should update article', ()=> {
     component.submitForm();
     expect(spyArticleService.updateArticle).toHaveBeenCalledOnceWith(mockArticle.slug, jasmine.any(Object));
-    expect(component.displaySuccessMessage).toBeTrue();
-    expect(component.errors).toEqual({});
+    expect(component.displaySuccessMessage()).toBeTrue();
+    expect(component.errors()).toEqual({});
   });
 });

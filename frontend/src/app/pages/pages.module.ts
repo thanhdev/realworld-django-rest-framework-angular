@@ -6,7 +6,6 @@ import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { UserSettingsComponent } from './user-settings/user-settings.component';
-import { EditorComponent } from './editor/editor.component';
 import { ArticlesFeedComponent } from './article/feed/articles-feed.component';
 import { ArticleComponent } from './article/article.component';
 import { ArticleMetaComponent } from './article/article-meta/article-meta.component';
@@ -15,6 +14,7 @@ import { ArticleCommentsComponent } from './article/article-comment/article-comm
 import { ArticleTagsComponent } from './article/article-tags/article-tags.component';
 import { MarkdownModule } from "ngx-markdown";
 import { ErrorMessageComponent } from '../shared/error-message/error-message.component';
+import { EditorComponent } from './editor/editor.component';
 
 
 @NgModule({
@@ -23,7 +23,6 @@ import { ErrorMessageComponent } from '../shared/error-message/error-message.com
     RegisterComponent,
     HomeComponent,
     UserSettingsComponent,
-    EditorComponent,
     ArticlesFeedComponent,
     ArticleComponent,
     ArticleMetaComponent,
@@ -36,7 +35,8 @@ import { ErrorMessageComponent } from '../shared/error-message/error-message.com
     ReactiveFormsModule,
     RouterModule,
     MarkdownModule.forChild(),
-    ErrorMessageComponent
+    ErrorMessageComponent,
+    EditorComponent
   ],
   exports: [
     LoginComponent,

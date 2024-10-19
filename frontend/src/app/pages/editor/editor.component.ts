@@ -1,19 +1,26 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ArticleFormViewModel } from "../../common/models/form/article-form.view-model";
 import { Article, CreateArticlePayload, UpdateArticlePayload } from "../../common/models/api/article.model";
 import { ArticleService } from "../../common/services/api/article.service";
 import { ActivatedRoute } from "@angular/router";
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrl: './editor.component.scss'
+  styleUrl: './editor.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ErrorMessageComponent,
+    ReactiveFormsModule
+  ],
+  standalone: true
 })
 export class EditorComponent {
-  public errors = {};
+  public errors = signal({});
+  public displaySuccessMessage = signal(false);
   public mainForm: FormGroup<ArticleFormViewModel>;
-  public displaySuccessMessage = false;
 
   private readonly _articleSlug?: string;
   private _article?: Article;
@@ -63,8 +70,8 @@ export class EditorComponent {
   }
 
   public submitForm(): void {
-    this.displaySuccessMessage = false;
-    this.errors = {};
+    this.displaySuccessMessage.set(false);
+    this.errors.set({});
 
     if (this.mainForm.invalid) {
       return;
@@ -90,7 +97,7 @@ export class EditorComponent {
   private _updateArticle(payload: UpdateArticlePayload): void {
     this._articleService.updateArticle(this._articleSlug!, payload).subscribe({
       next: () => {
-        this.displaySuccessMessage = true;
+        this.displaySuccessMessage.set(true);
       },
       error: (err) => {
         this.errors = err.error.errors;
@@ -101,11 +108,11 @@ export class EditorComponent {
   private _createArticle(payload: CreateArticlePayload): void {
     this._articleService.createArticle(payload).subscribe({
       next: () => {
-        this.displaySuccessMessage = true;
+        this.displaySuccessMessage.set(true);
         this.mainForm.reset(this._constructForm().value);
       },
       error: (err) => {
-        this.errors = err.error.errors;
+        this.errors.set(err.error.errors);
       }
     });
   }
