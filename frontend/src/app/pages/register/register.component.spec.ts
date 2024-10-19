@@ -6,36 +6,46 @@ import { UserService } from "../../common/services/api/user.service";
 import { of } from "rxjs";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { RouterTestingModule } from "@angular/router/testing";
+import { RouterModule, Router } from '@angular/router';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
 
   let spyUserService: Partial<jasmine.SpyObj<UserService>>;
+  let spyRouter: Partial<Router>;
 
   beforeEach(()=> {
     spyUserService = {
       registerUser: jasmine.createSpy('registerUser')
     }
-    spyUserService.registerUser!.and.returnValue(of(null as any))
+    spyUserService.registerUser!.and.returnValue(of(null as any));
+
+    spyRouter = {
+      navigateByUrl: jasmine.createSpy('navigateByUrl')
+    }
   })
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RegisterComponent],
       imports: [
         CommonModule,
         ReactiveFormsModule,
-        RouterTestingModule
+        RegisterComponent
       ],
       providers: [
-        {provide: UserService, useValue: spyUserService }
+        { provide: UserService, useValue: spyUserService },
+        { provide: Router, useValue: spyRouter }
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
       ]
     })
+      .overrideComponent(RegisterComponent, {
+        remove: {
+          imports: [RouterModule]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);

@@ -5,7 +5,7 @@ import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { UserService } from "../../common/services/api/user.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LoginUserPayload, User } from "../../common/models/api/user.model";
 import { of } from "rxjs";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -46,10 +46,10 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent],
       imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        LoginComponent
       ],
       providers: [
         AuthenticationService,
@@ -61,6 +61,11 @@ describe('LoginComponent', () => {
         CUSTOM_ELEMENTS_SCHEMA
       ]
     })
+      .overrideComponent(LoginComponent, {
+        remove: {
+          imports: [RouterModule]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);

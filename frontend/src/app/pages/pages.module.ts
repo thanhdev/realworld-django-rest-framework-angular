@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -19,8 +17,6 @@ import { EditorComponent } from './editor/editor.component';
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    RegisterComponent,
     HomeComponent,
     UserSettingsComponent,
     ArticlesFeedComponent,
@@ -39,8 +35,6 @@ import { EditorComponent } from './editor/editor.component';
     EditorComponent
   ],
   exports: [
-    LoginComponent,
-    RegisterComponent,
     HomeComponent
   ]
 })

@@ -7,7 +7,7 @@
           <a routerLink="/register">Need an account?</a>
         </p>
 
-        <app-error-message [errors]="errors"></app-error-message>
+        <app-error-message [errors]="errors()"></app-error-message>
 
         <form [formGroup]="mainForm">
           <fieldset class="form-group">
