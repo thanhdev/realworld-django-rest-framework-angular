@@ -8,7 +8,9 @@ import { ArticleService } from "../../common/services/api/article.service";
 import { of } from "rxjs";
 import { Article } from "../../common/models/api/article.model";
 import { ProfileService } from "../../common/services/api/profile.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MarkdownModule } from 'ngx-markdown';
+import { ArticleCommentsComponent } from './article-comment/article-comments.component';
 
 describe('ArticleComponent', () => {
   let component: ArticleComponent;
@@ -65,12 +67,13 @@ describe('ArticleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArticleComponent],
       imports: [
         CommonModule,
         RouterModule.forRoot([
           { path: 'article/1', component: ArticleComponent }
-        ])
+        ]),
+        MarkdownModule.forRoot(),
+        ArticleComponent
       ],
       providers: [
         AuthenticationService,
@@ -82,6 +85,14 @@ describe('ArticleComponent', () => {
         NO_ERRORS_SCHEMA
       ]
     })
+      .overrideComponent(ArticleComponent, {
+        remove: {
+          imports: [RouterModule, ArticleCommentsComponent]
+        },
+        add: {
+          schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(ArticleComponent);
@@ -95,7 +106,7 @@ describe('ArticleComponent', () => {
 
   it('should load article', () => {
     expect(spyArticleService.getArticle).toHaveBeenCalledWith('1');
-    expect(component.article).toEqual(mockArticle);
+    expect(component.article()).toEqual(mockArticle);
   });
 
   it('should delete article', () => {

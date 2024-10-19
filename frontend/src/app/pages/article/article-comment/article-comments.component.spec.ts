@@ -6,6 +6,7 @@ import { AuthenticationService } from "../../../common/services/utils/authentica
 import { ArticleService } from "../../../common/services/api/article.service";
 import { of } from "rxjs";
 import { ArticleComment } from "../../../common/models/api/comment.model";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ArticleCommentsComponent', () => {
   let component: ArticleCommentsComponent;
@@ -26,17 +27,25 @@ describe('ArticleCommentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArticleCommentsComponent],
       imports: [
         RouterModule.forRoot([
           { path: 'article/1', component: ArticleCommentsComponent },
-        ])
+        ]),
+        ArticleCommentsComponent
       ],
       providers: [
         AuthenticationService,
         { provide: ArticleService, useValue: spyArticleService }
       ]
     })
+      .overrideComponent(ArticleCommentsComponent, {
+        remove: {
+          imports: [RouterModule]
+        },
+        add: {
+          schemas: [NO_ERRORS_SCHEMA]
+        }
+      })
       .compileComponents();
 
     fixture = TestBed.createComponent(ArticleCommentsComponent);

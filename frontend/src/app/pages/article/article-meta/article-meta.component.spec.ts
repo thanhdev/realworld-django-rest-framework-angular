@@ -31,10 +31,10 @@ describe('ArticleMetaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArticleMetaComponent],
       imports: [
         CommonModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        ArticleMetaComponent
       ]
     })
     .compileComponents();

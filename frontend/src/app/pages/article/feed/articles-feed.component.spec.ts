@@ -25,17 +25,22 @@ describe('ArticlesFeedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArticlesFeedComponent],
       imports: [
         CommonModule,
         RouterModule.forRoot([
           { path: '', component: ArticlesFeedComponent }
-        ])
+        ]),
+        ArticlesFeedComponent
       ],
       providers: [
         { provide: ArticleService, useValue: spyArticleService },
       ]
     })
+      .overrideComponent(ArticlesFeedComponent, {
+        remove: {
+          imports: [RouterModule]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(ArticlesFeedComponent);

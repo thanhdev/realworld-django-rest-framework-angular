@@ -1,11 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { DEFAULT_PROFILE_IMAGE } from "../../../common/constants/default.constant";
 import { Article } from "../../../common/models/api/article.model";
+import { RouterModule } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-article-meta',
   templateUrl: './article-meta.component.html',
-  styleUrl: './article-meta.component.scss'
+  styleUrl: './article-meta.component.scss',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    RouterModule,
+    DatePipe
+  ]
 })
 export class ArticleMetaComponent {
 
