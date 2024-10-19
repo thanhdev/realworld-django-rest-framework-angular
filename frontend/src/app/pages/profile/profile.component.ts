@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ProfileService } from "../../common/services/api/profile.service";
-import { ActivatedRoute, Router, UrlTree } from "@angular/router";
+import { ActivatedRoute, Router, UrlTree, RouterModule } from '@angular/router';
 import { ProfileResponse, UserProfile } from "../../common/models/api/profile.model";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { finalize, Observable, switchMap } from "rxjs";
@@ -8,20 +8,30 @@ import { DEFAULT_PROFILE_IMAGE } from "../../common/constants/default.constant";
 import { QueryArticlesParams } from "../../common/models/api/article.model";
 import { FeedMenuEnum } from "../../common/models/view/feed.view-model";
 import { constructLoginUrlTree } from "../../common/guards/authentication.guard";
+import { ArticlesFeedComponent } from '../article/feed/articles-feed.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
+  standalone: true,
+  imports: [
+    ArticlesFeedComponent,
+    NgClass,
+    RouterModule
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
   public readonly DEFAULT_PROFILE_IMAGE = DEFAULT_PROFILE_IMAGE;
   private readonly _profileUsername: string;
-  public profile?: UserProfile;
+
+  public profile = signal<UserProfile | null>(null)
+  public isLoading = signal(true);
+  public profileNotFound = signal(false);
 
   public isMyProfile = false;
-  public profileNotFound = false;
-  public isLoading = true;
 
   public feedQueryParams?: QueryArticlesParams;
   public loginUrlTree: UrlTree;
@@ -42,17 +52,17 @@ export class ProfileComponent {
   }
 
   private _loadProfile(): void {
-    this.isLoading = true;
-    this.profileNotFound = false;
+    this.isLoading.set(true);
+    this.profileNotFound.set(false);
 
     this._constructUserProfileRequest()
       .subscribe({
         next: (profile: ProfileResponse) => {
-          this.profile = profile.profile
+          this.profile.set(profile.profile);
           this._setupFeedQueryParams();
         },
         error: () => {
-          this.profileNotFound = true
+          this.profileNotFound.set(true)
         }
       });
   }
@@ -63,11 +73,11 @@ export class ProfileComponent {
       switchMap((user) => {
         if (!this._profileUsername || user?.username === this._profileUsername) {
           this.isMyProfile = true;
-          return this._profileService.getProfile(user!.username).pipe(finalize(() => this.isLoading = false));
+          return this._profileService.getProfile(user!.username).pipe(finalize(() => this.isLoading.set(false)));
         }
 
         this.isMyProfile = false;
-        return this._profileService.getProfile(this._profileUsername).pipe(finalize(() => this.isLoading = false));
+        return this._profileService.getProfile(this._profileUsername).pipe(finalize(() => this.isLoading.set(false)));
       })
     );
   }
@@ -76,17 +86,17 @@ export class ProfileComponent {
     this.feedQueryParams = {};
 
     if (this._feedMenuType === FeedMenuEnum.MINE) {
-      this.feedQueryParams.author = this.profile!.username;
+      this.feedQueryParams.author = this.profile()!.username;
     } else if (this._feedMenuType === FeedMenuEnum.FAVORITES) {
-      this.feedQueryParams.favorited = this.profile!.username;
+      this.feedQueryParams.favorited = this.profile()!.username;
     }
   }
 
   public follow(): void {
-    this._profileService.followUser(this.profile!.username)
+    this._profileService.followUser(this.profile()!.username)
       .subscribe({
         next: (profile: ProfileResponse) => {
-          this.profile = profile.profile;
+          this.profile.set(profile.profile);
         },
         error: () => {
           this._router.navigateByUrl(this.loginUrlTree);
@@ -95,10 +105,10 @@ export class ProfileComponent {
   }
 
   public unfollow(): void {
-    this._profileService.unfollowUser(this.profile!.username)
+    this._profileService.unfollowUser(this.profile()!.username)
       .subscribe({
         next: (profile: ProfileResponse) => {
-          this.profile = profile.profile;
+          this.profile.set(profile.profile);
         },
         error: () => {
           this._router.navigateByUrl(this.loginUrlTree);

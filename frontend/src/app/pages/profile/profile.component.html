@@ -1,68 +1,67 @@
 <div class="profile-page">
-  <ng-container *ngIf="!isLoading">
+  @if (!isLoading()) {
     <div class="user-info">
       <div class="container">
-        <ng-container *ngIf="profile; else notFound">
+        @if (profile()) {
           <div class="row">
             <div class="col-xs-12 col-md-10 offset-md-1">
-              <img [src]="profile.image || DEFAULT_PROFILE_IMAGE" class="user-img"/>
-              <h4>{{ profile.username }}</h4>
+              <img [src]="profile()!.image || DEFAULT_PROFILE_IMAGE" class="user-img"/>
+              <h4>{{ profile()!.username }}</h4>
               <div>
-                {{ profile.bio }}
+                {{ profile()!.bio }}
               </div>
 
-              <ng-container *ngIf="!isMyProfile">
-                <button *ngIf="!profile.following" class="btn btn-sm btn-outline-secondary action-btn"
-                        (click)="follow()">
-                  <i class="ion-plus-round"></i>
-                  &nbsp; Follow {{ profile.username }}
+              @if (isMyProfile) {
+                <button class="btn btn-sm btn-outline-secondary action-btn" routerLink="/settings">
+                  <i class="ion-gear-a"></i>
+                  &nbsp; Edit Profile Settings
                 </button>
-
-                <button *ngIf="profile.following" class="btn btn-sm btn-secondary action-btn" (click)="unfollow()">
-                  <i class="ion-plus-round"></i>
-                  &nbsp; Unfollow {{ profile.username }}
-                </button>
-              </ng-container>
-
-
-              <button *ngIf="isMyProfile" class="btn btn-sm btn-outline-secondary action-btn" routerLink="/settings">
-                <i class="ion-gear-a"></i>
-                &nbsp; Edit Profile Settings
-              </button>
+              } @else {
+                @if (profile()!.following) {
+                  <button class="btn btn-sm btn-secondary action-btn" (click)="unfollow()">
+                    <i class="ion-plus-round"></i>
+                    &nbsp; Unfollow {{ profile()!.username }}
+                  </button>
+                } @else {
+                  <button class="btn btn-sm btn-outline-secondary action-btn" (click)="follow()">
+                    <i class="ion-plus-round"></i>
+                    &nbsp; Follow {{ profile()!.username }}
+                  </button>
+                }
+              }
             </div>
           </div>
-        </ng-container>
-
+        } @else {
+          <div class="row">
+            <div class="col-xs-12 col-md-10 offset-md-1">
+              <h4>The profile you are looking for does not exist.</h4>
+            </div>
+          </div>
+        }
       </div>
     </div>
 
-    <div class="container" *ngIf="profile">
-      <div class="row">
-        <div class="col-xs-12 col-md-10 offset-md-1">
-          <div class="articles-toggle">
-            <ul class="nav nav-pills outline-active">
-              <li class="nav-item">
-                <a class="nav-link" [ngClass]="{'active': feedQueryParams?.author}"
-                   routerLink="/profile/{{profile.username}}"> {{ profile.username }}'s Articles</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [ngClass]="{'active': feedQueryParams?.favorited}"
-                   routerLink="/profile/{{profile.username}}/favorites">{{ profile.username }}'s Favorited Articles</a>
-              </li>
-            </ul>
-          </div>
+    @if (profile()) {
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12 col-md-10 offset-md-1">
+            <div class="articles-toggle">
+              <ul class="nav nav-pills outline-active">
+                <li class="nav-item">
+                  <a class="nav-link" [ngClass]="{'active': feedQueryParams?.author}"
+                     routerLink="/profile/{{profile()!.username}}"> {{ profile()!.username }}'s Articles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [ngClass]="{'active': feedQueryParams?.favorited}"
+                     routerLink="/profile/{{profile()!.username}}/favorites">{{ profile()!.username }}'s Favorited Articles</a>
+                </li>
+              </ul>
+            </div>
 
-          <app-articles-feed [queryParams]="feedQueryParams"></app-articles-feed>
+            <app-articles-feed [queryParams]="feedQueryParams"></app-articles-feed>
+          </div>
         </div>
       </div>
-    </div>
-  </ng-container>
+    }
+  }
 </div>
-
-<ng-template #notFound>
-  <div class="row">
-    <div class="col-xs-12 col-md-10 offset-md-1">
-      <h4>The profile you are looking for does not exist.</h4>
-    </div>
-  </div>
-</ng-template>

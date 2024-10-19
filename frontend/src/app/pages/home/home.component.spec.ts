@@ -5,6 +5,8 @@ import { CommonModule } from "@angular/common";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { FeedMenuEnum } from "../../common/models/view/feed.view-model";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { ArticlesFeedComponent } from '../article/feed/articles-feed.component';
+import { ArticleTagsComponent } from '../article/article-tags/article-tags.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -12,17 +14,22 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HomeComponent],
       imports: [
-        CommonModule
+        CommonModule,
+        HomeComponent
       ],
       providers: [
         AuthenticationService
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
       ]
     })
+      .overrideComponent(HomeComponent, {
+        remove: {
+          imports: [ArticlesFeedComponent, ArticleTagsComponent]
+        },
+        add: {
+          schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -35,13 +42,13 @@ describe('HomeComponent', () => {
   });
 
   it('should set global feed as default active item', () => {
-    expect(component.activeFeed?.id).toBe(FeedMenuEnum.GLOBAL);
+    expect(component.activeFeed()?.id).toBe(FeedMenuEnum.GLOBAL);
   });
 
   it('should add tag feed and set active', () => {
-    const originalFeedList = component.feedList;
+    const originalFeedList = component.feedList();
     component.setTagsFeed('tag');
-    expect(component.feedList.length).toBe(originalFeedList.length + 1);
-    expect(component.activeFeed?.id).toBe(FeedMenuEnum.TAGS);
+    expect(component.feedList().length).toBe(originalFeedList.length + 1);
+    expect(component.activeFeed()?.id).toBe(FeedMenuEnum.TAGS);
   });
 });

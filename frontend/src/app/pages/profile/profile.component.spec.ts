@@ -8,7 +8,8 @@ import { AuthenticationService } from "../../common/services/utils/authenticatio
 import { ProfileService } from "../../common/services/api/profile.service";
 import { of } from "rxjs";
 import { UserProfile } from "../../common/models/api/profile.model";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ArticlesFeedComponent } from '../article/feed/articles-feed.component';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -50,21 +51,26 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileComponent],
       imports: [
         CommonModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        ProfileComponent
       ],
       providers: [
         Router,
         AuthenticationService,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: ProfileService, useValue: spyProfileService }
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
       ]
     })
+      .overrideComponent(ProfileComponent, {
+        remove: {
+          imports: [RouterModule, ArticlesFeedComponent]
+        },
+        add: {
+          schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+        }
+      })
     .compileComponents();
 
     fixture = TestBed.createComponent(ProfileComponent);
@@ -78,18 +84,18 @@ describe('ProfileComponent', () => {
 
   it('should load profile', () => {
     expect(spyProfileService.getProfile).toHaveBeenCalledWith(mockUserProfile.username);
-    expect(component.profile).toEqual(mockUserProfile);
+    expect(component.profile()).toEqual(mockUserProfile);
   });
 
   it('should follow user', () => {
     component.follow();
     expect(spyProfileService.followUser).toHaveBeenCalledWith(mockUserProfile.username);
-    expect(component.profile).toEqual(mockUserProfile);
+    expect(component.profile()).toEqual(mockUserProfile);
   });
 
   it('should unfollow user', () => {
     component.unfollow();
     expect(spyProfileService.unfollowUser).toHaveBeenCalledWith(mockUserProfile.username);
-    expect(component.profile).toEqual(mockUserProfile);
+    expect(component.profile()).toEqual(mockUserProfile);
   });
 });

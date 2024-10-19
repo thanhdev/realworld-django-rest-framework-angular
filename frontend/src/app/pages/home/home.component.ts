@@ -1,24 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed, Signal } from '@angular/core';
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { FeedMenu, FeedMenuEnum } from "../../common/models/view/feed.view-model";
 import { QueryArticlesParams } from "../../common/models/api/article.model";
+import { NgClass } from '@angular/common';
+import { ArticlesFeedComponent } from '../article/feed/articles-feed.component';
+import { ArticleTagsComponent } from '../article/article-tags/article-tags.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
+  standalone: true,
+  imports: [
+    NgClass,
+    ArticlesFeedComponent,
+    ArticleTagsComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class HomeComponent {
-  public feedList: FeedMenu[];
-  public activeFeed?: FeedMenu;
-  public feedQueryParams?: QueryArticlesParams;
+  public feedList = signal<FeedMenu[]>([]);
+  public activeFeed: Signal<FeedMenu | undefined>;
+  public feedQueryParams = signal<QueryArticlesParams>({});
 
   constructor(
     private readonly _authenticationService: AuthenticationService,
   ) {
-    this.feedList = this._constructFeedList();
-    this.activeFeed = this.feedList.find(feed => feed.isActive);
+    this.activeFeed = computed(() => this.feedList().find(feed => feed.isActive));
+    this.feedList.set(this._constructFeedList());
   }
 
   private _constructFeedList(): FeedMenu[] {
@@ -35,17 +45,17 @@ export class HomeComponent {
   }
 
   public setActiveFeed(activeFeed: FeedMenu): void {
-    this.activeFeed = activeFeed;
-
     if (activeFeed.id === FeedMenuEnum.TAGS) {
-      this.feedQueryParams = { tag: activeFeed.name.slice(1) };
+      this.feedQueryParams.set({ tag: activeFeed.name.slice(1) });
       return;
     }
 
-    this.feedQueryParams = {};
-    this.feedList = this.feedList.map(feed => {
-      feed.isActive = feed.id === activeFeed.id;
-      return feed;
+    this.feedQueryParams.set({});
+    this.feedList.update(feedList => {
+      return feedList.map(feed => {
+        feed.isActive = feed.id === activeFeed.id;
+        return feed;
+      });
     });
   }
 
@@ -59,6 +69,6 @@ export class HomeComponent {
 
     this.setActiveFeed(tagFeed);
 
-    this.feedList = feedList;
+    this.feedList.set(feedList);
   }
 }
