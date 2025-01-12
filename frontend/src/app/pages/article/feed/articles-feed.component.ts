@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FeedMenuEnum } from "../../../common/models/view/feed.view-model";
 import { ArticleService } from "../../../common/services/api/article.service";
-import { Article, ArticlesResponse, QueryArticlesParams } from "../../../common/models/api/article.model";
+import { Article, ArticleResponse, ArticlesResponse, QueryArticlesParams } from "../../../common/models/api/article.model";
 import { finalize, Observable } from "rxjs";
 import { QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
 import { Router, RouterModule } from '@angular/router';
@@ -37,11 +37,8 @@ export class ArticlesFeedComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes['feedMenuId']?.currentValue) {
-      this._queryFeed();
-    }
-
-    if (changes['queryParams']?.currentValue) {
+    if (changes['feedMenuId']?.currentValue || changes['queryParams']?.currentValue) {
+      this.activePageIndex.set(0);
       this._queryFeed();
     }
   }
@@ -50,11 +47,10 @@ export class ArticlesFeedComponent implements OnChanges {
     this.isLoading.set(true);
     this._constructQueryRequest()
       .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe((response:ArticlesResponse) => {
+      .subscribe((response: ArticlesResponse) => {
         this.totalPages = Math.ceil(response.articlesCount / QUERY_PAGE_SIZE);
         this.articles.set(response.articles);
-        this.activePageIndex.set(0);
-    })
+      })
   }
 
   private _constructQueryRequest(): Observable<ArticlesResponse> {
@@ -85,7 +81,7 @@ export class ArticlesFeedComponent implements OnChanges {
 
     if (article.favorited) {
       this._articleService.unfavoriteArticle(article.slug).subscribe({
-        next: (response) => {
+        next: (response: ArticleResponse) => {
           this._setSingleArticle(response.article);
         },
         error: () => {
@@ -94,7 +90,7 @@ export class ArticlesFeedComponent implements OnChanges {
       });
     } else {
       this._articleService.favoriteArticle(article.slug).subscribe({
-        next: (response) => {
+        next: (response: ArticleResponse) => {
           this._setSingleArticle(response.article);
         },
         error: () => {
@@ -105,8 +101,8 @@ export class ArticlesFeedComponent implements OnChanges {
   }
 
   private _setSingleArticle(article: Article): void {
-    const articleIndex = this.articles().findIndex(a => a.slug === article.slug);
-    this.articles.update(articles => {
+    const articleIndex = this.articles().findIndex((a: Article) => a.slug === article.slug);
+    this.articles.update((articles: Article[]) => {
       if (articleIndex > -1) {
         articles[articleIndex] = article;
       }
