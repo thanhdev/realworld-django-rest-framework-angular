@@ -10,15 +10,15 @@
         <ng-container *ngTemplateOutlet="articleMeta; context: { $implicit: article }"></ng-container>
         <ng-container *ngTemplateOutlet="articlePreview; context: { $implicit: article }"></ng-container>
       </div>
-
-      <ul class="pagination">
-        @for (page of [].constructor(totalPages); track page; let i = $index) {
-          <li class="page-item" [ngClass]="{'active': i === activePageIndex()}">
-            <a class="page-link" (click)="loadPagingData(i)">{{ i + 1 }}</a>
-          </li>
-        }
-      </ul>
     }
+    
+    <ul class="pagination">
+      @for (page of [].constructor(totalPages); track page; let i = $index) {
+        <li class="page-item" [ngClass]="{'active': i === activePageIndex()}">
+          <a class="page-link" (click)="loadPagingData(i)">{{ i + 1 }}</a>
+        </li>
+      }
+    </ul>
   } @else {
     <div class="article-preview">
       No articles are here... yet.
