@@ -8,7 +8,7 @@ describe('ErrorMessageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ErrorMessageComponent]
+      imports: [ErrorMessageComponent]
     })
     .compileComponents();
 

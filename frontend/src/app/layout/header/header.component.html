@@ -3,33 +3,35 @@
     <a class="navbar-brand" (click)="setActiveMenuItem(menuItems[0].name)" routerLink="/">conduit</a>
     <ul class="nav navbar-nav pull-xs-right">
 
-      <ng-container *ngIf="(currentUser$ | async) as currentUser; else guestHeader">
-        <li *ngFor="let menu of menuItems" class="nav-item" (click)="setActiveMenuItem(menu.name)">
-          <ng-container *ngIf="menu.customDisplay == 'Profile'">
-            <a class="nav-link" [ngClass]="{'active': menu.isActive}" [routerLink]="menu.link">
-            <img [src]="currentUser.image || defaultProfileImg" class="user-pic" alt="User profile image" />
-            {{ currentUser.username }}
-            </a>
-          </ng-container>
-
-          <ng-container *ngIf="!menu.customDisplay">
+      @if (currentUser$ | async; as currentUser) {
+        @for (menu of menuItems; track menu.link) {
+          <li class="nav-item" (click)="setActiveMenuItem(menu.name)">
+            @if (menu.customDisplay == 'Profile') {
+              <a class="nav-link" [ngClass]="{'active': menu.isActive}" [routerLink]="menu.link">
+                <img [src]="currentUser.image || defaultProfileImg" class="user-pic" alt="User profile image" />
+                {{ currentUser.username }}
+              </a>
+              } @else {
+              <ng-container *ngTemplateOutlet="normalLink; context: {$implicit: menu}"></ng-container>
+            }
+          </li>
+        }
+      } @else {
+        @for (menu of menuItems; track menu.link) {
+          <li class="nav-item" (click)="setActiveMenuItem(menu.name)">
             <ng-container *ngTemplateOutlet="normalLink; context: {$implicit: menu}"></ng-container>
-          </ng-container>
-        </li>
-      </ng-container>
-
-      <ng-template #guestHeader>
-        <li *ngFor="let menu of menuItems" class="nav-item" (click)="setActiveMenuItem(menu.name)">
-          <ng-container *ngTemplateOutlet="normalLink; context: {$implicit: menu}"></ng-container>
-        </li>
-      </ng-template>
-
-      <ng-template #normalLink let-menu>
-        <a class="nav-link" [ngClass]="{'active': menu.isActive}" [routerLink]="menu.link">
-          <i *ngIf="menu.icon" [class]="menu.icon"></i>&nbsp;
-          {{menu.name}}
-        </a>
-      </ng-template>
+          </li>
+        }
+      }
     </ul>
   </div>
 </nav>
+
+<ng-template #normalLink let-menu>
+  <a class="nav-link" [ngClass]="{'active': menu.isActive}" [routerLink]="menu.link">
+    @if (menu.icon) {
+      <i [class]="menu.icon"></i>&nbsp;
+    }
+    {{ menu.name }}
+  </a>
+</ng-template>

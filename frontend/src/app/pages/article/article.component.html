@@ -1,4 +1,4 @@
-<div *ngIf="isLoading">
+@if (isLoading()) {
   <div class="article-page">
     <div class="banner">
       <div class="container">
@@ -6,47 +6,49 @@
       </div>
     </div>
   </div>
-</div>
+} @else {
+  @if (article()) {
+    <div class="article-page">
+      <div class="banner">
+        <div class="container">
+          <h1>{{ article()!.title }}</h1>
 
-<ng-container *ngIf="!isLoading">
-  <div class="article-page" *ngIf="article">
-    <div class="banner">
-      <div class="container">
-        <h1>{{ article.title }}</h1>
-
-        <ng-container *ngTemplateOutlet="articleMeta; context:{ $implicit: article }"></ng-container>
-      </div>
-    </div>
-
-    <div class="container page">
-      <div class="row article-content">
-        <div class="col-md-12">
-          <markdown [data]="article.body"></markdown>
-          <br>
-          <ul class="tag-list">
-            <li *ngFor="let tag of article.tagList" class="tag-default tag-pill tag-outline">{{ tag }}</li>
-          </ul>
+          <ng-container *ngTemplateOutlet="articleMeta; context:{ $implicit: article() }"></ng-container>
         </div>
       </div>
 
-      <hr />
+      <div class="container page">
+        <div class="row article-content">
+          <div class="col-md-12">
+            <markdown [data]="article()!.body"></markdown>
+            <br>
+            <ul class="tag-list">
+              @for (tag of article()!.tagList; track tag) {
+                <li class="tag-default tag-pill tag-outline">{{ tag }}</li>
+              }
+            </ul>
+          </div>
+        </div>
 
-      <div class="article-actions">
-        <ng-container *ngTemplateOutlet="articleMeta; context:{ $implicit: article }"></ng-container>
+        <hr />
+
+        <div class="article-actions">
+          <ng-container *ngTemplateOutlet="articleMeta; context:{ $implicit: article() }"></ng-container>
+        </div>
+
+        <app-article-comments></app-article-comments>
       </div>
-
-      <app-article-comments></app-article-comments>
     </div>
-  </div>
-
-  <div class="article-page" *ngIf="!article">
-    <div class="banner">
-      <div class="container">
-        <h1>No article found</h1>
+  } @else {
+    <div class="article-page">
+      <div class="banner">
+        <div class="container">
+          <h1>No article found</h1>
+        </div>
       </div>
     </div>
-  </div>
-</ng-container>
+  }
+}
 
 <ng-template #articleMeta let-article>
   <div class="article-meta">

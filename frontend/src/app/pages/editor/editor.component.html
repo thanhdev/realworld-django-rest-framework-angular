@@ -4,11 +4,13 @@
       <div class="col-md-10 offset-md-1 col-xs-12">
         <h1 class="text-xs-center">Article editor</h1>
 
-        <ul *ngIf="displaySuccessMessage && mainForm.pristine" class="success-messages">
-          <li>Published successfully!</li>
-        </ul>
+        @if (displaySuccessMessage() && mainForm.pristine) {
+          <ul class="success-messages">
+            <li>Published successfully!</li>
+          </ul>
+        }
 
-        <app-error-message [errors]="errors"></app-error-message>
+        <app-error-message [errors]="errors()"></app-error-message>
 
         <form [formGroup]="mainForm">
           <fieldset>
@@ -31,12 +33,16 @@
             </fieldset>
             <fieldset class="form-group">
               <input formControlName="tagInput" (change)="addTag()" type="text" class="form-control" placeholder="Enter tags" />
-              <div class="tag-list">
-                <span *ngFor="let tag of mainForm.value.tagList" class="tag-default tag-pill">
-                  <i class="ion-close-round" (click)="removeTag(tag)"></i>
-                  {{ tag }}
-                </span>
-              </div>
+              @if (tagsUpdated()) {
+                <div class="tag-list">
+                  @for (tag of mainForm.value.tagList; track tag) {
+                    <span class="tag-default tag-pill">
+                      <i class="ion-close-round" (click)="removeTag(tag)"></i>
+                      {{ tag }}
+                    </span>
+                  }
+                </div>
+              }
             </fieldset>
           </fieldset>
         </form>

@@ -11,13 +11,15 @@
       <div class="col-md-9">
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">
-            <li *ngFor="let feed of feedList" class="nav-item">
-              <a class="nav-link" [ngClass]="{'active': feed.isActive}" (click)="setActiveFeed(feed)">{{feed.name}}</a>
-            </li>
+            @for (feed of feedList(); track feed.name) {
+              <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': feed.isActive}" (click)="setActiveFeed(feed)">{{feed.name}}</a>
+              </li>
+            }
           </ul>
         </div>
 
-        <app-articles-feed [feedMenuId]="activeFeed?.id" [queryParams]="feedQueryParams"></app-articles-feed>
+        <app-articles-feed [feedMenuId]="activeFeed()?.id" [queryParams]="feedQueryParams()"></app-articles-feed>
       </div>
 
       <div class="col-md-3">

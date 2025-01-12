@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArticleTagsComponent } from './article-tags.component';
-import { CommonModule } from "@angular/common";
 import { TagService } from "../../../common/services/api/tag.service";
 import { of } from "rxjs";
 
@@ -20,9 +19,8 @@ describe('ArticleTagsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArticleTagsComponent],
       imports: [
-        CommonModule
+        ArticleTagsComponent
       ],
       providers: [
         { provide: TagService, useValue: spyTagService }

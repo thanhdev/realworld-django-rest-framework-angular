@@ -4,11 +4,13 @@
       <div class="col-md-6 offset-md-3 col-xs-12">
         <h1 class="text-xs-center">Your Settings</h1>
 
-        <ul *ngIf="displaySuccessMessage && mainForm.pristine" class="success-messages">
-          <li>Updated successfully!</li>
-        </ul>
+        @if (displaySuccessMessage() && mainForm.pristine) {
+          <ul class="success-messages">
+            <li>Updated successfully!</li>
+          </ul>
+        }
 
-        <app-error-message [errors]="errors"></app-error-message>
+        <app-error-message [errors]="errors()"></app-error-message>
 
         <form [formGroup]="mainForm">
           <fieldset>

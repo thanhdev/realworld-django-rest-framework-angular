@@ -1,20 +1,28 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RegisterFormViewModel } from "../../common/models/form/authentication-form.view-model";
 import { UserService } from "../../common/services/api/user.service";
 import { CreateUserPayload } from "../../common/models/api/user.model";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from '@angular/router';
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ErrorMessageComponent,
+    ReactiveFormsModule,
+    RouterModule
+  ],
+  standalone: true
 })
 export class RegisterComponent {
   public mainForm: FormGroup<RegisterFormViewModel>;
-  public errors: {[key: string]: string[] | null} = {};
-  public successDisplayed = false;
+  public errors = signal({});
+  public successDisplayed = signal(false);
 
   constructor(
     private readonly _userService: UserService,
@@ -42,11 +50,11 @@ export class RegisterComponent {
       }
     }
 
-    this.errors = {};
+    this.errors.set({});
 
     this._userService.registerUser(payload).subscribe({
       next: () => {
-        this.successDisplayed = true;
+        this.successDisplayed.set(true);
 
         setTimeout(
           () => {this._router.navigateByUrl('/login');},
@@ -54,8 +62,8 @@ export class RegisterComponent {
         );
       },
       error: (err: HttpErrorResponse) => {
-        this.successDisplayed = false;
-        this.errors = err.error.errors;
+        this.successDisplayed.set(false);
+        this.errors.set(err.error.errors);
       }
     });
   }

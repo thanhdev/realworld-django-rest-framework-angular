@@ -3,10 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LayoutModule } from "./layout/layout.module";
-import { PagesModule } from "./pages/pages.module";
 import { provideHttpClient } from "@angular/common/http";
 import { MarkdownModule } from "ngx-markdown";
+import { LayoutComponent } from './layout/layout.component';
 
 @NgModule({
   declarations: [
@@ -16,9 +15,7 @@ import { MarkdownModule } from "ngx-markdown";
     BrowserModule,
     AppRoutingModule,
     MarkdownModule.forRoot(),
-
-    LayoutModule,
-    PagesModule
+    LayoutComponent
   ],
   providers: [
     provideHttpClient()

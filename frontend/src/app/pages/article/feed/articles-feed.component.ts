@@ -1,25 +1,34 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FeedMenuEnum } from "../../../common/models/view/feed.view-model";
 import { ArticleService } from "../../../common/services/api/article.service";
 import { Article, ArticlesResponse, QueryArticlesParams } from "../../../common/models/api/article.model";
 import { finalize, Observable } from "rxjs";
 import { QUERY_PAGE_SIZE } from "../../../common/constants/default.constant";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from '@angular/router';
 import { constructLoginUrlTree } from "../../../common/guards/authentication.guard";
+import { CommonModule } from '@angular/common';
+import { ArticleMetaComponent } from '../article-meta/article-meta.component';
 
 @Component({
   selector: 'app-articles-feed',
   templateUrl: './articles-feed.component.html',
-  styleUrl: './articles-feed.component.scss'
+  styleUrl: './articles-feed.component.scss',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ArticleMetaComponent
+  ]
 })
 export class ArticlesFeedComponent implements OnChanges {
   @Input() feedMenuId?: FeedMenuEnum;
   @Input() queryParams?: QueryArticlesParams = {};
 
-  public articles: Article[] = [];
-  public activePageIndex = 0;
+  public articles = signal<Article[]>([]);
+  public activePageIndex = signal(0);
+  public isLoading = signal(true);
   public totalPages = 0;
-  public isLoading = true;
 
   constructor(
     private readonly _articleService: ArticleService,
@@ -38,13 +47,13 @@ export class ArticlesFeedComponent implements OnChanges {
   }
 
   private _queryFeed(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this._constructQueryRequest()
-      .pipe(finalize(() => this.isLoading = false))
+      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe((response:ArticlesResponse) => {
-      this.articles = response.articles;
-      this.totalPages = Math.ceil(response.articlesCount / QUERY_PAGE_SIZE);
-      this.activePageIndex = 0;
+        this.totalPages = Math.ceil(response.articlesCount / QUERY_PAGE_SIZE);
+        this.articles.set(response.articles);
+        this.activePageIndex.set(0);
     })
   }
 
@@ -52,7 +61,7 @@ export class ArticlesFeedComponent implements OnChanges {
     const queryParams = {
       ...this.queryParams,
       limit: QUERY_PAGE_SIZE,
-      offset: this.activePageIndex * QUERY_PAGE_SIZE
+      offset: this.activePageIndex() * QUERY_PAGE_SIZE
     };
 
     if (this.feedMenuId === FeedMenuEnum.MINE) {
@@ -63,16 +72,16 @@ export class ArticlesFeedComponent implements OnChanges {
   }
 
   public loadPagingData(pageIndex: number): void {
-    if (this.activePageIndex === pageIndex) {
+    if (this.activePageIndex() === pageIndex) {
       return;
     }
 
-    this.activePageIndex = pageIndex;
+    this.activePageIndex.set(pageIndex);
     this._queryFeed();
   }
 
   public toggleArticleFavorite(article: Article): void {
-    if (!this.articles) return;
+    if (!this.articles()) return;
 
     if (article.favorited) {
       this._articleService.unfavoriteArticle(article.slug).subscribe({
@@ -96,8 +105,13 @@ export class ArticlesFeedComponent implements OnChanges {
   }
 
   private _setSingleArticle(article: Article): void {
-    const articleIndex = this.articles.findIndex(a => a.slug === article.slug);
-    this.articles[articleIndex] = article;
-    this.articles = [...this.articles]
+    const articleIndex = this.articles().findIndex(a => a.slug === article.slug);
+    this.articles.update(articles => {
+      if (articleIndex > -1) {
+        articles[articleIndex] = article;
+      }
+
+      return [...articles];
+    });
   }
 }

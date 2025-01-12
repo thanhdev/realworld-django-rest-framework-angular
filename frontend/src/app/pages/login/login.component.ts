@@ -1,19 +1,27 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { LoginFormViewModel } from "../../common/models/form/authentication-form.view-model";
 import { UserService } from "../../common/services/api/user.service";
 import { LoginUserPayload, LoginUserResponse } from "../../common/models/api/user.model";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    ErrorMessageComponent,
+    ReactiveFormsModule,
+    RouterModule
+  ]
 })
 export class LoginComponent {
-  public errors = {};
+  public errors = signal({});
 
   public mainForm: FormGroup<LoginFormViewModel>;
 
@@ -48,7 +56,7 @@ export class LoginComponent {
         this._router.navigateByUrl(this._activatedRoute.snapshot.queryParams['returnUrl'] || '/');
       },
       error: (err: HttpErrorResponse) => {
-        this.errors = err.error.errors;
+        this.errors.set(err.error.errors);
       }
     });
   }

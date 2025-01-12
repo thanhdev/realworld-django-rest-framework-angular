@@ -1,21 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AuthenticationService } from "../../common/services/utils/authentication.service";
 import { Router } from "@angular/router";
 import { LoginUserResponse, UpdateUserPayload, User } from "../../common/models/api/user.model";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserProfileFormViewModel } from "../../common/models/form/user-profile-form.view-model";
 import { UserService } from "../../common/services/api/user.service";
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-user-settings',
   templateUrl: './user-settings.component.html',
-  styleUrl: './user-settings.component.scss'
+  styleUrl: './user-settings.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    ErrorMessageComponent
+  ]
 })
 export class UserSettingsComponent {
 
-  public errors = {};
+  public readonly errors = signal({});
+  public readonly displaySuccessMessage = signal(false);
   public mainForm: FormGroup<UserProfileFormViewModel>;
-  public displaySuccessMessage = false;
 
   constructor(
     private readonly _authenticationService: AuthenticationService,
@@ -64,15 +71,15 @@ export class UserSettingsComponent {
       delete payload.user.password;
     }
 
-    this.errors = {};
+    this.errors.set({});
 
     this._userService.updateUser(payload).subscribe({
       next: (user: LoginUserResponse) => {
-        this.displaySuccessMessage = true;
+        this.displaySuccessMessage.set(true);
         this._authenticationService.login(user.user);
       },
       error: (error) => {
-        this.errors = error.error.errors;
+        this.errors.set(error.error.errors);
       }
     });
   }

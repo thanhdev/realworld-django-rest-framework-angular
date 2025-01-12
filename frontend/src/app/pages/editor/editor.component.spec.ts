@@ -2,12 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditorComponent } from './editor.component';
 import { CommonModule } from "@angular/common";
-import { SharedModule } from "../../shared/shared.module";
 import { ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { ArticleService } from "../../common/services/api/article.service";
 import { Article } from "../../common/models/api/article.model";
 import { of } from "rxjs";
 import { ReactiveFormsModule } from "@angular/forms";
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -44,11 +44,11 @@ describe('EditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditorComponent],
       imports: [
+        ErrorMessageComponent,
         CommonModule,
-        SharedModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        EditorComponent
       ],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -97,7 +97,7 @@ describe('EditorComponent', () => {
   it('should update article', ()=> {
     component.submitForm();
     expect(spyArticleService.updateArticle).toHaveBeenCalledOnceWith(mockArticle.slug, jasmine.any(Object));
-    expect(component.displaySuccessMessage).toBeTrue();
-    expect(component.errors).toEqual({});
+    expect(component.displaySuccessMessage()).toBeTrue();
+    expect(component.errors()).toEqual({});
   });
 });

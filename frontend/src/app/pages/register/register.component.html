@@ -7,11 +7,13 @@
           <a routerLink="/login">Have an account?</a>
         </p>
 
-        <app-error-message [errors]="errors"></app-error-message>
+        <app-error-message [errors]="errors()"></app-error-message>
 
-        <ul *ngIf="successDisplayed" class="success-messages">
-          <li>Registration successful. Redirecting to login page...</li>
-        </ul>
+        @if (successDisplayed()) {
+          <ul class="success-messages">
+            <li>Registration successful. Redirecting to login page...</li>
+          </ul>
+        }
 
         <form [formGroup]="mainForm">
           <fieldset class="form-group">
